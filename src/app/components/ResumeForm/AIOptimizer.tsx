@@ -19,12 +19,21 @@ export const AIOptimizer = ({ onOptimize, currentText }: AIOptimizerProps) => {
     
     // Simulate AI processing with context
     setTimeout(() => {
-      const actionVerbs = ["Spearheaded", "Architected", "Orchestrated", "Optimized", "Leveraged", "Engineered"];
+      const actionVerbs = ["Spearheaded", "Architected", "Orchestrated", "Optimized", "Leveraged", "Engineered", "Pioneered", "Catalyzed"];
       const randomVerb = actionVerbs[Math.floor(Math.random() * actionVerbs.length)];
       
       let suggestion = "";
       const words = currentText.trim().split(" ");
-      words[0] = randomVerb;
+      
+      // Check if it already starts with an action verb
+      const startsWithVerb = actionVerbs.some(v => words[0]?.toLowerCase() === v.toLowerCase());
+      if (!startsWithVerb) {
+        words[0] = randomVerb;
+      }
+
+      // Check for quantification
+      const hasNumbers = /\d+/.test(currentText);
+      const quantificationSuffix = hasNumbers ? "" : " resulting in a 20% increase in operational efficiency.";
 
       // If we have a JD, try to inject a keyword
       if (jd) {
@@ -33,12 +42,12 @@ export const AIOptimizer = ({ onOptimize, currentText }: AIOptimizerProps) => {
         
         if (uniqueKeywords.length > 0) {
           const keyword = uniqueKeywords[Math.floor(Math.random() * uniqueKeywords.length)];
-          suggestion = `${words.join(" ")} by leveraging ${keyword} to drive a 20% increase in performance.`;
+          suggestion = `${words.join(" ")} by leveraging ${keyword}${quantificationSuffix}`;
         } else {
-          suggestion = `${words.join(" ")} resulting in a 15% increase in efficiency.`;
+          suggestion = `${words.join(" ")}${quantificationSuffix}`;
         }
       } else {
-        suggestion = `${words.join(" ")} resulting in a 15% increase in efficiency.`;
+        suggestion = `${words.join(" ")}${quantificationSuffix}`;
       }
       
       onOptimize(suggestion);
