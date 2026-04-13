@@ -12,6 +12,7 @@ import {
   changeShowBulletPoints,
   selectThemeColor,
 } from "lib/redux/settingsSlice";
+import { AIOptimizer } from "components/ResumeForm/AIOptimizer";
 
 export const SkillsForm = () => {
   const skills = useAppSelector(selectSkills);
@@ -24,6 +25,17 @@ export const SkillsForm = () => {
   const handleSkillsChange = (field: "descriptions", value: string[]) => {
     dispatch(changeSkills({ field, value }));
   };
+
+  const handleAIOptimize = (newText: string) => {
+    const newDescriptions = [...descriptions];
+    if (newDescriptions.length > 0) {
+      newDescriptions[newDescriptions.length - 1] = newText;
+    } else {
+      newDescriptions.push(newText);
+    }
+    handleSkillsChange("descriptions", newDescriptions);
+  };
+
   const handleFeaturedSkillsChange = (
     idx: number,
     skill: string,
@@ -38,10 +50,15 @@ export const SkillsForm = () => {
   return (
     <Form form={form}>
       <div className="col-span-full grid grid-cols-6 gap-3">
-        <div className="relative col-span-full">
+        <div className="relative col-span-full space-y-2">
+          <div className="flex items-center justify-between">
+            <label className="text-base font-medium text-gray-700">Skills List</label>
+            <AIOptimizer 
+              currentText={descriptions[descriptions.length - 1] || ""} 
+              onOptimize={handleAIOptimize} 
+            />
+          </div>
           <BulletListTextarea
-            label="Skills List"
-            labelClassName="col-span-full"
             name="descriptions"
             placeholder="Bullet points"
             value={descriptions}
