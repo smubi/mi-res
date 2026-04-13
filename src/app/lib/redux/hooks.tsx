@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect } from "react";
 import {
   useDispatch,
@@ -15,7 +17,8 @@ import {
   setSettings,
   type Settings,
 } from "lib/redux/settingsSlice";
-import { setJobDescription, type AIState } from "lib/redux/aiSlice";
+import { setJobDescription, setCoverLetter, initialAIState } from "lib/redux/aiSlice";
+import { setSnapshots, initialSnapshotState } from "lib/redux/snapshotSlice";
 import { deepMerge } from "lib/deep-merge";
 import type { Resume } from "lib/redux/types";
 
@@ -39,6 +42,7 @@ export const useSetInitialStore = () => {
   useEffect(() => {
     const state = loadStateFromLocalStorage();
     if (!state) return;
+
     if (state.resume) {
       const mergedResumeState = deepMerge(
         initialResumeState,
@@ -46,6 +50,7 @@ export const useSetInitialStore = () => {
       ) as Resume;
       dispatch(setResume(mergedResumeState));
     }
+
     if (state.settings) {
       const mergedSettingsState = deepMerge(
         initialSettings,
@@ -53,8 +58,19 @@ export const useSetInitialStore = () => {
       ) as Settings;
       dispatch(setSettings(mergedSettingsState));
     }
-    if (state.ai && state.ai.jobDescription) {
-      dispatch(setJobDescription(state.ai.jobDescription));
+
+    if (state.ai) {
+      const mergedAIState = deepMerge(initialAIState, state.ai);
+      if (mergedAIState.jobDescription) {
+        dispatch(setJobDescription(mergedAIState.jobDescription));
+      }
+      if (mergedAIState.coverLetter) {
+        dispatch(setCoverLetter(mergedAIState.coverLetter));
+      }
+    }
+
+    if (state.snapshots && state.snapshots.snapshots) {
+      dispatch(setSnapshots(state.snapshots.snapshots));
     }
   }, [dispatch]);
 };

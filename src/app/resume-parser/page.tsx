@@ -13,6 +13,8 @@ import { ResumeGrade } from "resume-parser/ResumeGrade";
 import { PlainTextPreview } from "resume-parser/PlainTextPreview";
 import { saveStateToLocalStorage } from "lib/redux/local-storage";
 import { initialSettings } from "lib/redux/settingsSlice";
+import { initialAIState } from "lib/redux/aiSlice";
+import { initialSnapshotState } from "lib/redux/snapshotSlice";
 import { 
   UserIcon, 
   AcademicCapIcon, 
@@ -55,8 +57,9 @@ export default function ResumeParser() {
     saveStateToLocalStorage({
       resume,
       settings: initialSettings,
-      ai: { jobDescription: "", isAnalyzing: false }
-    } as any);
+      ai: initialAIState,
+      snapshots: initialSnapshotState,
+    });
     router.push("/resume-builder");
   };
 
