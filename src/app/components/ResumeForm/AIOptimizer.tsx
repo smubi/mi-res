@@ -1,5 +1,7 @@
 import { SparklesIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
+import { useAppSelector } from "lib/redux/hooks";
+import { selectJobDescription } from "lib/redux/aiSlice";
 
 interface AIOptimizerProps {
   onOptimize: (suggestion: string) => void;
@@ -8,25 +10,40 @@ interface AIOptimizerProps {
 
 export const AIOptimizer = ({ onOptimize, currentText }: AIOptimizerProps) => {
   const [isOptimizing, setIsOptimizing] = useState(false);
+  const jd = useAppSelector(selectJobDescription);
 
   const handleOptimize = () => {
     if (!currentText || isOptimizing) return;
     
     setIsOptimizing(true);
     
-    // Simulate AI processing
+    // Simulate AI processing with context
     setTimeout(() => {
       const actionVerbs = ["Spearheaded", "Architected", "Orchestrated", "Optimized", "Leveraged", "Engineered"];
       const randomVerb = actionVerbs[Math.floor(Math.random() * actionVerbs.length)];
       
-      // Simple heuristic: replace the first word with a strong action verb if it's not already one
+      let suggestion = "";
       const words = currentText.trim().split(" ");
       words[0] = randomVerb;
-      const suggestion = words.join(" ") + " resulting in a 15% increase in efficiency.";
+
+      // If we have a JD, try to inject a keyword
+      if (jd) {
+        const jdKeywords = jd.toLowerCase().match(/\b(\w{5,})\b/g) || [];
+        const uniqueKeywords = Array.from(new Set(jdKeywords)).filter(w => !currentText.toLowerCase().includes(w));
+        
+        if (uniqueKeywords.length > 0) {
+          const keyword = uniqueKeywords[Math.floor(Math.random() * uniqueKeywords.length)];
+          suggestion = `${words.join(" ")} by leveraging ${keyword} to drive a 20% increase in performance.`;
+        } else {
+          suggestion = `${words.join(" ")} resulting in a 15% increase in efficiency.`;
+        }
+      } else {
+        suggestion = `${words.join(" ")} resulting in a 15% increase in efficiency.`;
+      }
       
       onOptimize(suggestion);
       setIsOptimizing(false);
-    }, 800);
+    }, 1000);
   };
 
   return (
