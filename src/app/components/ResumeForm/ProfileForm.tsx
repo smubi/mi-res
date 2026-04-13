@@ -3,7 +3,6 @@ import { Input, Textarea } from "components/ResumeForm/Form/InputGroup";
 import { useAppDispatch, useAppSelector } from "lib/redux/hooks";
 import { changeProfile, selectProfile } from "lib/redux/resumeSlice";
 import { ResumeProfile } from "lib/redux/types";
-import { AIOptimizer } from "components/ResumeForm/AIOptimizer";
 
 export const ProfileForm = () => {
   const profile = useAppSelector(selectProfile);
@@ -12,10 +11,6 @@ export const ProfileForm = () => {
 
   const handleProfileChange = (field: keyof ResumeProfile, value: string) => {
     dispatch(changeProfile({ field, value }));
-  };
-
-  const handleAIOptimize = (newText: string) => {
-    handleProfileChange("summary", newText);
   };
 
   return (
@@ -29,21 +24,14 @@ export const ProfileForm = () => {
           value={name}
           onChange={handleProfileChange}
         />
-        <div className="col-span-full space-y-2">
-          <div className="flex items-center justify-between">
-            <label className="text-base font-medium text-gray-700">Professional Summary</label>
-            <AIOptimizer 
-              currentText={summary} 
-              onOptimize={handleAIOptimize} 
-            />
-          </div>
-          <Textarea
-            name="summary"
-            placeholder="Entrepreneur and educator obsessed with making education free for anyone"
-            value={summary}
-            onChange={handleProfileChange}
-          />
-        </div>
+        <Textarea
+          label="Objective"
+          labelClassName="col-span-full"
+          name="summary"
+          placeholder="Entrepreneur and educator obsessed with making education free for anyone"
+          value={summary}
+          onChange={handleProfileChange}
+        />
         <Input
           label="Email"
           labelClassName="col-span-4"

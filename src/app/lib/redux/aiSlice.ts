@@ -4,13 +4,11 @@ import type { RootState } from "lib/redux/store";
 export interface AIState {
   jobDescription: string;
   isAnalyzing: boolean;
-  coverLetter: string;
 }
 
 const initialState: AIState = {
   jobDescription: "",
   isAnalyzing: false,
-  coverLetter: "",
 };
 
 export const aiSlice = createSlice({
@@ -23,16 +21,12 @@ export const aiSlice = createSlice({
     setIsAnalyzing: (draft, action: PayloadAction<boolean>) => {
       draft.isAnalyzing = action.payload;
     },
-    setCoverLetter: (draft, action: PayloadAction<string>) => {
-      draft.coverLetter = action.payload;
-    },
   },
 });
 
-export const { setJobDescription, setIsAnalyzing, setCoverLetter } = aiSlice.actions;
+export const { setJobDescription, setIsAnalyzing } = aiSlice.actions;
 
 export const selectJobDescription = (state: RootState) => state.ai.jobDescription;
 export const selectIsAnalyzing = (state: RootState) => state.ai.isAnalyzing;
-export const selectCoverLetter = (state: RootState) => state.ai.coverLetter;
 
 export default aiSlice.reducer;
