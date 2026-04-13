@@ -72,7 +72,7 @@ export const LiveGrader = () => {
 
       // Quantitative Metrics Check
       const metricsCount = allBullets.filter(b => /\d+%|\d+\s?percent|\$\d+|\d+\+/.test(b)).length;
-      const metricsRatio = metricsCount / allBullets.length;
+      const metricsRatio = allBullets.length > 0 ? metricsCount / allBullets.length : 0;
       if (metricsRatio < 0.3) {
         score += Math.round(metricsRatio * 10);
         deductions.push("Missing quantitative metrics (%, $, #) in most bullet points.");
@@ -101,7 +101,7 @@ export const LiveGrader = () => {
   }, [resume]);
 
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+    <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm mb-6">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-50 text-sky-600">

@@ -16,9 +16,9 @@ interface FormTabsProps {
 
 export const FormTabs = ({ activeTab, onChange }: FormTabsProps) => {
   const tabs = [
-    { id: "content", label: "Content", icon: PencilSquareIcon },
-    { id: "optimize", label: "Optimize", icon: SparklesIcon },
-    { id: "design", label: "Design", icon: PaintBrushIcon },
+    { id: "content", label: "Content", icon: PencilSquareIcon, isNew: false },
+    { id: "optimize", label: "Optimize", icon: SparklesIcon, isNew: true },
+    { id: "design", label: "Design", icon: PaintBrushIcon, isNew: false },
   ] as const;
 
   return (
@@ -33,7 +33,7 @@ export const FormTabs = ({ activeTab, onChange }: FormTabsProps) => {
               key={tab.id}
               onClick={() => onChange(tab.id)}
               className={cx(
-                "flex items-center gap-2 border-b-2 py-4 text-sm font-bold transition-all",
+                "relative flex items-center gap-2 border-b-2 py-4 text-sm font-bold transition-all",
                 isActive
                   ? "border-sky-500 text-sky-600"
                   : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
@@ -41,6 +41,12 @@ export const FormTabs = ({ activeTab, onChange }: FormTabsProps) => {
             >
               <Icon className={cx("h-5 w-5", isActive ? "text-sky-500" : "text-gray-400")} />
               {tab.label}
+              {tab.isNew && (
+                <span className="absolute -right-4 top-3 flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-sky-500"></span>
+                </span>
+              )}
             </button>
           );
         })}
