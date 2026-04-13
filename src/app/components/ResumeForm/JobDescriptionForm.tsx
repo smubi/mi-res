@@ -2,7 +2,7 @@ import { BaseForm } from "components/ResumeForm/Form";
 import { Textarea } from "components/ResumeForm/Form/InputGroup";
 import { useAppDispatch, useAppSelector } from "lib/redux/hooks";
 import { setJobDescription, selectJobDescription } from "lib/redux/aiSlice";
-import { BriefcaseIcon } from "@heroicons/react/24/outline";
+import { BriefcaseIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { KeywordMatcher } from "components/ResumeForm/KeywordMatcher";
 
 export const JobDescriptionForm = () => {
@@ -13,14 +13,29 @@ export const JobDescriptionForm = () => {
     dispatch(setJobDescription(value));
   };
 
+  const handleClear = () => {
+    dispatch(setJobDescription(""));
+  };
+
   return (
     <BaseForm>
       <div className="flex flex-col gap-4">
-        <div className="flex items-center gap-2">
-          <BriefcaseIcon className="h-6 w-6 text-gray-600" aria-hidden="true" />
-          <h1 className="text-lg font-semibold tracking-wide text-gray-900">
-            Target Job Description
-          </h1>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <BriefcaseIcon className="h-6 w-6 text-gray-600" aria-hidden="true" />
+            <h1 className="text-lg font-semibold tracking-wide text-gray-900">
+              Target Job Description
+            </h1>
+          </div>
+          {jobDescription && (
+            <button 
+              onClick={handleClear}
+              className="flex items-center gap-1 text-xs font-bold text-gray-400 hover:text-red-500 transition-colors"
+            >
+              <XMarkIcon className="h-3 w-3" />
+              Clear
+            </button>
+          )}
         </div>
         <p className="text-sm text-gray-600">
           Paste the job description here to analyze keyword matches and tailor your resume.

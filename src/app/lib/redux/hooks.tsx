@@ -15,6 +15,7 @@ import {
   setSettings,
   type Settings,
 } from "lib/redux/settingsSlice";
+import { setJobDescription, type AIState } from "lib/redux/aiSlice";
 import { deepMerge } from "lib/deep-merge";
 import type { Resume } from "lib/redux/types";
 
@@ -39,9 +40,6 @@ export const useSetInitialStore = () => {
     const state = loadStateFromLocalStorage();
     if (!state) return;
     if (state.resume) {
-      // We merge the initial state with the stored state to ensure
-      // backward compatibility, since new fields might be added to
-      // the initial state over time.
       const mergedResumeState = deepMerge(
         initialResumeState,
         state.resume
@@ -55,5 +53,8 @@ export const useSetInitialStore = () => {
       ) as Settings;
       dispatch(setSettings(mergedSettingsState));
     }
-  }, []);
+    if (state.ai && state.ai.jobDescription) {
+      dispatch(setJobDescription(state.ai.jobDescription));
+    }
+  }, [dispatch]);
 };
