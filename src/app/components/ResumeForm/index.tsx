@@ -19,6 +19,8 @@ import { SmartSuggestions } from "./SmartSuggestions";
 import { SkillSuggestions } from "./SkillSuggestions";
 import { CoverLetterGenerator } from "./CoverLetterGenerator";
 import { ResumeChecklist } from "./ResumeChecklist";
+import { ResumeSnapshots } from "./ResumeSnapshots";
+import { InterviewPrep } from "./InterviewPrep";
 import { FlexboxSpacer } from "components/FlexboxSpacer";
 import { FormTabs, TabType } from "./FormTabs";
 import { cx } from "lib/cx";
@@ -67,6 +69,7 @@ export const ResumeForm = () => {
               <JobDescriptionForm />
               <ResumeAnalysis />
               <SkillSuggestions />
+              <InterviewPrep />
               <ResumeChecklist />
               <CoverLetterGenerator />
               <SmartSuggestions />
@@ -74,7 +77,10 @@ export const ResumeForm = () => {
           )}
 
           {activeTab === "design" && (
-            <ThemeForm />
+            <>
+              <ThemeForm />
+              <ResumeSnapshots />
+            </>
           )}
           
           <br />
