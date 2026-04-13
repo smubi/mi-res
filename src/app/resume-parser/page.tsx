@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { readPdf } from "lib/parse-resume-from-pdf/read-pdf";
 import type { TextItems } from "lib/parse-resume-from-pdf/types";
 import { groupTextItemsIntoLines } from "lib/parse-resume-from-pdf/group-text-items-into-lines";
@@ -8,16 +9,21 @@ import { groupLinesIntoSections } from "lib/parse-resume-from-pdf/group-lines-in
 import { extractResumeFromSections } from "lib/parse-resume-from-pdf/extract-resume-from-sections";
 import { DropzoneOverlay } from "resume-parser/DropzoneOverlay";
 import { ResultCard } from "resume-parser/ResultCard";
+import { ResumeGrade } from "resume-parser/ResumeGrade";
+import { saveStateToLocalStorage } from "lib/redux/local-storage";
+import { initialSettings } from "lib/redux/settingsSlice";
 import { 
   UserIcon, 
   AcademicCapIcon, 
   BriefcaseIcon, 
   WrenchIcon,
   DocumentTextIcon,
-  ArrowUpTrayIcon
+  ArrowUpTrayIcon,
+  SparklesIcon
 } from "@heroicons/react/24/outline";
 
 export default function ResumeParser() {
+  const router = useRouter();
   const [fileUrl, setFileUrl] = useState("resume-example/laverne-resume.pdf");
   const [textItems, setTextItems] = useState<TextItems>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -39,6 +45,15 @@ export default function ResumeParser() {
   const handleFileDrop = (file: File) => {
     const url = URL.createObjectURL(file);
     setFileUrl(url);
+  };
+
+  const handleTailorResume = () => {
+    saveStateToLocalStorage({
+      resume,
+      settings: initialSettings,
+      ai: { jobDescription: "", isAnalyzing: false }
+    } as any);
+    router.push("/resume-builder");
   };
 
   return (
@@ -66,6 +81,13 @@ export default function ResumeParser() {
                 onChange={(e) => e.target.files?.[0] && handleFileDrop(e.target.files[0])} 
               />
             </label>
+            <button 
+              onClick={handleTailorResume}
+              className="flex items-center gap-2 rounded-full bg-purple-600 px-6 py-3 text-sm font-bold text-white shadow-lg transition-all hover:bg-purple-700 active:scale-95"
+            >
+              <SparklesIcon className="h-4 w-4" />
+              Tailor this Resume
+            </button>
           </div>
         </div>
       </div>
@@ -95,8 +117,9 @@ export default function ResumeParser() {
 
           {/* Results Grid */}
           <div className="lg:col-span-7">
+            <ResumeGrade resume={resume} />
+            
             <div className="grid gap-6 sm:grid-cols-2">
-              
               <ResultCard title="Profile" icon={UserIcon}>
                 <p className="text-xl font-bold">{resume.profile.name || "Not found"}</p>
                 <p className="text-sm text-gray-500">{resume.profile.email}</p>
@@ -158,7 +181,6 @@ export default function ResumeParser() {
                   ))}
                 </div>
               </ResultCard>
-
             </div>
           </div>
 
