@@ -13,7 +13,6 @@ import { ProjectsForm } from "components/ResumeForm/ProjectsForm";
 import { SkillsForm } from "components/ResumeForm/SkillsForm";
 import { ThemeForm } from "components/ResumeForm/ThemeForm";
 import { CustomForm } from "components/ResumeForm/CustomForm";
-import { TailorForm } from "components/ResumeForm/TailorForm";
 import { FlexboxSpacer } from "components/FlexboxSpacer";
 import { cx } from "lib/cx";
 
@@ -42,7 +41,6 @@ export const ResumeForm = () => {
       onMouseLeave={() => setIsHover(false)}
     >
       <section className="flex max-w-2xl flex-col gap-8 p-[var(--resume-padding)]">
-        <TailorForm />
         <ProfileForm />
         {formsOrder.map((form) => {
           const Component = formTypeToComponent[form];
