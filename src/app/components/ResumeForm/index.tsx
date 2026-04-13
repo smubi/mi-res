@@ -15,7 +15,10 @@ import { ThemeForm } from "components/ResumeForm/ThemeForm";
 import { CustomForm } from "components/ResumeForm/CustomForm";
 import { JobDescriptionForm } from "components/ResumeForm/JobDescriptionForm";
 import { ResumeAnalysis } from "components/ResumeForm/ResumeAnalysis";
+import { SmartSuggestions } from "components/ResumeForm/SmartSuggestions";
+import { CoverLetterGenerator } from "components/ResumeForm/CoverLetterGenerator";
 import { FlexboxSpacer } from "components/FlexboxSpacer";
+import { FormTabs, TabType } from "components/ResumeForm/FormTabs";
 import { cx } from "lib/cx";
 
 const formTypeToComponent: { [type in ShowForm]: () => JSX.Element } = {
@@ -32,28 +35,48 @@ export const ResumeForm = () => {
 
   const formsOrder = useAppSelector(selectFormsOrder);
   const [isHover, setIsHover] = useState(false);
+  const [activeTab, setActiveTab] = useState<TabType>("content");
 
   return (
     <div
       className={cx(
-        "flex justify-center scrollbar-thin scrollbar-track-gray-100 md:h-[calc(100vh-var(--top-nav-bar-height))] md:justify-end md:overflow-y-scroll",
+        "flex flex-col scrollbar-thin scrollbar-track-gray-100 md:h-[calc(100vh-var(--top-nav-bar-height))] md:overflow-y-scroll",
         isHover ? "scrollbar-thumb-gray-200" : "scrollbar-thumb-gray-100"
       )}
       onMouseOver={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
     >
-      <section className="flex max-w-2xl flex-col gap-8 p-[var(--resume-padding)]">
-        <JobDescriptionForm />
-        <ResumeAnalysis />
-        <ProfileForm />
-        {formsOrder.map((form) => {
-          const Component = formTypeToComponent[form];
-          return <Component key={form} />;
-        })}
-        <ThemeForm />
-        <br />
-      </section>
-      <FlexboxSpacer maxWidth={50} className="hidden md:block" />
+      <FormTabs activeTab={activeTab} onChange={setActiveTab} />
+      
+      <div className="flex justify-center md:justify-end">
+        <section className="flex w-full max-w-2xl flex-col gap-8 p-[var(--resume-padding)]">
+          {activeTab === "content" && (
+            <>
+              <ProfileForm />
+              {formsOrder.map((form) => {
+                const Component = formTypeToComponent[form];
+                return <Component key={form} />;
+              })}
+            </>
+          )}
+
+          {activeTab === "optimize" && (
+            <>
+              <JobDescriptionForm />
+              <ResumeAnalysis />
+              <CoverLetterGenerator />
+              <SmartSuggestions />
+            </>
+          )}
+
+          {activeTab === "design" && (
+            <ThemeForm />
+          )}
+          
+          <br />
+        </section>
+        <FlexboxSpacer maxWidth={50} className="hidden md:block" />
+      </div>
     </div>
   );
 };
