@@ -8,7 +8,13 @@ if (typeof window !== "undefined" && window.location.hostname === "localhost") {
   const consoleError = console.error;
   const SUPPRESSED_WARNINGS = ["DOCUMENT", "PAGE", "TEXT", "VIEW"];
   console.error = function filterWarnings(msg, ...args) {
-    if (!SUPPRESSED_WARNINGS.some((entry) => args[0]?.includes(entry))) {
+    const isSuppressed =
+      (typeof msg === "string" &&
+        SUPPRESSED_WARNINGS.some((entry) => msg.includes(entry))) ||
+      (typeof args[0] === "string" &&
+        SUPPRESSED_WARNINGS.some((entry) => args[0].includes(entry)));
+
+    if (!isSuppressed) {
       consoleError(msg, ...args);
     }
   };
