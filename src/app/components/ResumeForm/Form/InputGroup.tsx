@@ -3,7 +3,7 @@ import ContentEditable from "react-contenteditable";
 import { useAutosizeTextareaHeight } from "lib/hooks/useAutosizeTextareaHeight";
 
 interface InputProps<K extends string, V extends string | string[]> {
-  label: string;
+  label: React.ReactNode;
   labelClassName?: string;
   // name is passed in as a const string. Therefore, we make it a generic type so its type can
   // be more restricted as a const for the first argument in onChange
@@ -22,7 +22,7 @@ export const InputGroupWrapper = ({
   className,
   children,
 }: {
-  label: string;
+  label: React.ReactNode;
   className?: string;
   children?: React.ReactNode;
 }) => (

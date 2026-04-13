@@ -13,13 +13,13 @@ interface SnapshotState {
   snapshots: Snapshot[];
 }
 
-const initialState: SnapshotState = {
+export const initialSnapshotState: SnapshotState = {
   snapshots: [],
 };
 
 export const snapshotSlice = createSlice({
   name: "snapshots",
-  initialState,
+  initialState: initialSnapshotState,
   reducers: {
     addSnapshot: (draft, action: PayloadAction<{ name: string; resume: Resume }>) => {
       draft.snapshots.push({

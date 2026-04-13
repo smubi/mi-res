@@ -22,8 +22,8 @@ export const SkillsForm = () => {
   const showBulletPoints = useAppSelector(selectShowBulletPoints(form));
   const themeColor = useAppSelector(selectThemeColor) || "#38bdf8";
 
-  const handleSkillsChange = (field: "descriptions", value: string[]) => {
-    dispatch(changeSkills({ field, value }));
+  const handleSkillsChange = (name: string, value: string[]) => {
+    dispatch(changeSkills({ field: name as "descriptions", value }));
   };
 
   const handleAIOptimize = (newText: string) => {
@@ -51,14 +51,16 @@ export const SkillsForm = () => {
     <Form form={form}>
       <div className="col-span-full grid grid-cols-6 gap-3">
         <div className="relative col-span-full space-y-2">
-          <div className="flex items-center justify-between">
-            <label className="text-base font-medium text-gray-700">Skills List</label>
-            <AIOptimizer 
-              currentText={descriptions[descriptions.length - 1] || ""} 
-              onOptimize={handleAIOptimize} 
-            />
-          </div>
           <BulletListTextarea
+            label={
+              <div className="flex items-center justify-between">
+                <span>Skills List</span>
+                <AIOptimizer
+                  currentText={descriptions[descriptions.length - 1] || ""}
+                  onOptimize={handleAIOptimize}
+                />
+              </div>
+            }
             name="descriptions"
             placeholder="Bullet points"
             value={descriptions}

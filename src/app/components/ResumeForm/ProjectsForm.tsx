@@ -66,14 +66,16 @@ export const ProjectsForm = () => {
               labelClassName="col-span-2"
             />
             <div className="col-span-full space-y-2">
-              <div className="flex items-center justify-between">
-                <label className="text-base font-medium text-gray-700">Description</label>
-                <AIOptimizer 
-                  currentText={descriptions[descriptions.length - 1] || ""} 
-                  onOptimize={handleAIOptimize} 
-                />
-              </div>
               <BulletListTextarea
+                label={
+                  <div className="flex items-center justify-between">
+                    <span>Description</span>
+                    <AIOptimizer
+                      currentText={descriptions[descriptions.length - 1] || ""}
+                      onOptimize={handleAIOptimize}
+                    />
+                  </div>
+                }
                 name="descriptions"
                 placeholder="Bullet points"
                 value={descriptions}

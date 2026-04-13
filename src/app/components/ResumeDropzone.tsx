@@ -7,6 +7,8 @@ import {
   saveStateToLocalStorage,
 } from "lib/redux/local-storage";
 import { type ShowForm, initialSettings } from "lib/redux/settingsSlice";
+import { initialAIState } from "lib/redux/aiSlice";
+import { initialSnapshotState } from "lib/redux/snapshotSlice";
 import { useRouter } from "next/navigation";
 import addPdfSrc from "public/assets/add-pdf.svg";
 import Image from "next/image";
@@ -90,7 +92,12 @@ export const ResumeDropzone = ({
       }
     }
 
-    saveStateToLocalStorage({ resume, settings });
+    saveStateToLocalStorage({
+      resume,
+      settings,
+      ai: initialAIState,
+      snapshots: initialSnapshotState,
+    });
     router.push("/resume-builder");
   };
 

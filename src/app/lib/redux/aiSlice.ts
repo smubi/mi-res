@@ -7,7 +7,7 @@ export interface AIState {
   coverLetter: string;
 }
 
-const initialState: AIState = {
+export const initialAIState: AIState = {
   jobDescription: "",
   isAnalyzing: false,
   coverLetter: "",
@@ -15,7 +15,7 @@ const initialState: AIState = {
 
 export const aiSlice = createSlice({
   name: "ai",
-  initialState,
+  initialState: initialAIState,
   reducers: {
     setJobDescription: (draft, action: PayloadAction<string>) => {
       draft.jobDescription = action.payload;

@@ -30,14 +30,16 @@ export const ProfileForm = () => {
           onChange={handleProfileChange}
         />
         <div className="col-span-full space-y-2">
-          <div className="flex items-center justify-between">
-            <label className="text-base font-medium text-gray-700">Professional Summary</label>
-            <AIOptimizer 
-              currentText={summary} 
-              onOptimize={handleAIOptimize} 
-            />
-          </div>
           <Textarea
+            label={
+              <div className="flex items-center justify-between">
+                <span>Professional Summary</span>
+                <AIOptimizer
+                  currentText={summary}
+                  onOptimize={handleAIOptimize}
+                />
+              </div>
+            }
             name="summary"
             placeholder="Entrepreneur and educator obsessed with making education free for anyone"
             value={summary}
