@@ -1,130 +1,167 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import { readPdf } from "lib/parse-resume-from-pdf/read-pdf";
 import type { TextItems } from "lib/parse-resume-from-pdf/types";
 import { groupTextItemsIntoLines } from "lib/parse-resume-from-pdf/group-text-items-into-lines";
 import { groupLinesIntoSections } from "lib/parse-resume-from-pdf/group-lines-into-sections";
 import { extractResumeFromSections } from "lib/parse-resume-from-pdf/extract-resume-from-sections";
-import { ResumeDropzone } from "components/ResumeDropzone";
-import { cx } from "lib/cx";
-import { Heading, Link, Paragraph } from "components/documentation";
-import { ResumeTable } from "resume-parser/ResumeTable";
-import { FlexboxSpacer } from "components/FlexboxSpacer";
-import { ResumeParserAlgorithmArticle } from "resume-parser/ResumeParserAlgorithmArticle";
+import { DropzoneOverlay } from "resume-parser/DropzoneOverlay";
+import { ResultCard } from "resume-parser/ResultCard";
+import { 
+  UserIcon, 
+  AcademicCapIcon, 
+  BriefcaseIcon, 
+  WrenchIcon,
+  DocumentTextIcon,
+  ArrowUpTrayIcon
+} from "@heroicons/react/24/outline";
 
-const RESUME_EXAMPLES = [
-  {
-    fileUrl: "resume-example/laverne-resume.pdf",
-    description: (
-      <span>
-        Borrowed from University of La Verne Career Center -{" "}
-        <Link href="https://laverne.edu/careers/wp-content/uploads/sites/15/2010/12/Undergraduate-Student-Resume-Examples.pdf">
-          Link
-        </Link>
-      </span>
-    ),
-  },
-  {
-    fileUrl: "resume-example/openresume-resume.pdf",
-    description: (
-      <span>
-        Created with OpenResume resume builder -{" "}
-        <Link href="/resume-builder">Link</Link>
-      </span>
-    ),
-  },
-];
-
-const defaultFileUrl = RESUME_EXAMPLES[0]["fileUrl"];
 export default function ResumeParser() {
-  const [fileUrl, setFileUrl] = useState(defaultFileUrl);
+  const [fileUrl, setFileUrl] = useState("resume-example/laverne-resume.pdf");
   const [textItems, setTextItems] = useState<TextItems>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
   const lines = groupTextItemsIntoLines(textItems || []);
   const sections = groupLinesIntoSections(lines);
   const resume = extractResumeFromSections(sections);
 
   useEffect(() => {
-    async function test() {
-      const textItems = await readPdf(fileUrl);
-      setTextItems(textItems);
+    async function loadInitial() {
+      setIsLoading(true);
+      const items = await readPdf(fileUrl);
+      setTextItems(items);
+      setIsLoading(false);
     }
-    test();
+    loadInitial();
   }, [fileUrl]);
 
+  const handleFileDrop = (file: File) => {
+    const url = URL.createObjectURL(file);
+    setFileUrl(url);
+  };
+
   return (
-    <main className="h-full w-full overflow-hidden">
-      <div className="grid md:grid-cols-6">
-        <div className="flex justify-center px-2 md:col-span-3 md:h-[calc(100vh-var(--top-nav-bar-height))] md:justify-end">
-          <section className="mt-5 grow px-4 md:max-w-[600px] md:px-0">
-            <div className="aspect-h-[9.5] aspect-w-7">
-              <iframe src={`${fileUrl}#navpanes=0`} className="h-full w-full" />
-            </div>
-          </section>
-          <FlexboxSpacer maxWidth={45} className="hidden md:block" />
-        </div>
-        <div className="flex px-6 text-gray-900 md:col-span-3 md:h-[calc(100vh-var(--top-nav-bar-height))] md:overflow-y-scroll">
-          <FlexboxSpacer maxWidth={45} className="hidden md:block" />
-          <section className="max-w-[600px] grow">
-            <Heading className="text-primary !mt-4">
-              Resume Parser Playground
-            </Heading>
-            <Paragraph smallMarginTop={true}>
-              This playground showcases the OpenResume resume parser and its
-              ability to parse information from a resume PDF. Click around the
-              PDF examples below to observe different parsing results.
-            </Paragraph>
-            <div className="mt-3 flex gap-3">
-              {RESUME_EXAMPLES.map((example, idx) => (
-                <article
-                  key={idx}
-                  className={cx(
-                    "flex-1 cursor-pointer rounded-md border-2 px-4 py-3 shadow-sm outline-none hover:bg-gray-50 focus:bg-gray-50",
-                    example.fileUrl === fileUrl
-                      ? "border-blue-400"
-                      : "border-gray-300"
-                  )}
-                  onClick={() => setFileUrl(example.fileUrl)}
-                  onKeyDown={(e) => {
-                    if (["Enter", " "].includes(e.key))
-                      setFileUrl(example.fileUrl);
-                  }}
-                  tabIndex={0}
-                >
-                  <h1 className="font-semibold">Resume Example {idx + 1}</h1>
-                  <p className="mt-2 text-sm text-gray-500">
-                    {example.description}
-                  </p>
-                </article>
-              ))}
-            </div>
-            <Paragraph>
-              You can also{" "}
-              <span className="font-semibold">add your resume below</span> to
-              access how well your resume would be parsed by similar Application
-              Tracking Systems (ATS) used in job applications. The more
-              information it can parse out, the better it indicates the resume
-              is well formatted and easy to read. It is beneficial to have the
-              name and email accurately parsed at the very least.
-            </Paragraph>
-            <div className="mt-3">
-              <ResumeDropzone
-                onFileUrlChange={(fileUrl) =>
-                  setFileUrl(fileUrl || defaultFileUrl)
-                }
-                playgroundView={true}
+    <main className="min-h-screen bg-gray-50/50 pb-20">
+      <DropzoneOverlay onDrop={handleFileDrop} />
+      
+      {/* Header */}
+      <div className="bg-white border-b border-gray-100 py-12">
+        <div className="mx-auto max-w-5xl px-6 text-center">
+          <h1 className="text-4xl font-black tracking-tight text-gray-900 sm:text-5xl">
+            Resume <span className="text-sky-500">Parser</span>
+          </h1>
+          <p className="mt-4 text-lg text-gray-500">
+            Drop a PDF anywhere to see how ATS systems read your data.
+          </p>
+          
+          <div className="mt-8 flex justify-center gap-4">
+            <label className="flex cursor-pointer items-center gap-2 rounded-full bg-gray-900 px-6 py-3 text-sm font-bold text-white shadow-lg transition-all hover:bg-gray-800 active:scale-95">
+              <ArrowUpTrayIcon className="h-4 w-4" />
+              Upload PDF
+              <input 
+                type="file" 
+                className="hidden" 
+                accept=".pdf" 
+                onChange={(e) => e.target.files?.[0] && handleFileDrop(e.target.files[0])} 
               />
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div className="mx-auto mt-12 max-w-7xl px-6">
+        <div className="grid gap-8 lg:grid-cols-12">
+          
+          {/* PDF Preview */}
+          <div className="lg:col-span-5">
+            <div className="sticky top-8 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl">
+              <div className="flex items-center justify-between border-b border-gray-100 bg-gray-50/50 px-4 py-3">
+                <div className="flex gap-1.5">
+                  <div className="h-3 w-3 rounded-full bg-red-400" />
+                  <div className="h-3 w-3 rounded-full bg-amber-400" />
+                  <div className="h-3 w-3 rounded-full bg-green-400" />
+                </div>
+                <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Document Preview</span>
+              </div>
+              <div className="aspect-[1/1.4] w-full">
+                <iframe 
+                  src={`${fileUrl}#navpanes=0&toolbar=0`} 
+                  className={isLoading ? "opacity-20 transition-opacity" : "h-full w-full transition-opacity"} 
+                />
+              </div>
             </div>
-            <Heading level={2} className="!mt-[1.2em]">
-              Resume Parsing Results
-            </Heading>
-            <ResumeTable resume={resume} />
-            <ResumeParserAlgorithmArticle
-              textItems={textItems}
-              lines={lines}
-              sections={sections}
-            />
-            <div className="pt-24" />
-          </section>
+          </div>
+
+          {/* Results Grid */}
+          <div className="lg:col-span-7">
+            <div className="grid gap-6 sm:grid-cols-2">
+              
+              <ResultCard title="Profile" icon={UserIcon}>
+                <p className="text-xl font-bold">{resume.profile.name || "Not found"}</p>
+                <p className="text-sm text-gray-500">{resume.profile.email}</p>
+                <p className="text-sm text-gray-500">{resume.profile.phone}</p>
+                <p className="mt-2 text-xs italic text-gray-400 line-clamp-2">{resume.profile.summary}</p>
+              </ResultCard>
+
+              <ResultCard title="Education" icon={AcademicCapIcon}>
+                {resume.educations.map((edu, i) => (
+                  <div key={i} className={i > 0 ? "mt-4 border-t border-gray-50 pt-4" : ""}>
+                    <p className="font-bold">{edu.school}</p>
+                    <p className="text-sm text-gray-500">{edu.degree}</p>
+                    <p className="text-xs text-sky-500 font-medium">{edu.date}</p>
+                  </div>
+                ))}
+              </ResultCard>
+
+              <div className="sm:col-span-2">
+                <ResultCard title="Work Experience" icon={BriefcaseIcon}>
+                  <div className="grid gap-6 md:grid-cols-2">
+                    {resume.workExperiences.map((work, i) => (
+                      <div key={i} className="space-y-1">
+                        <p className="font-bold">{work.company}</p>
+                        <p className="text-sm font-medium text-gray-600">{work.jobTitle}</p>
+                        <p className="text-xs text-gray-400">{work.date}</p>
+                        <ul className="mt-2 space-y-1">
+                          {work.descriptions.slice(0, 2).map((desc, j) => (
+                            <li key={j} className="text-xs text-gray-500 line-clamp-1">• {desc}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                </ResultCard>
+              </div>
+
+              <ResultCard title="Skills" icon={WrenchIcon}>
+                <div className="flex flex-wrap gap-2">
+                  {resume.skills.featuredSkills.filter(s => s.skill).map((s, i) => (
+                    <span key={i} className="rounded-lg bg-gray-100 px-2 py-1 text-xs font-bold text-gray-600">
+                      {s.skill}
+                    </span>
+                  ))}
+                  {resume.skills.descriptions.map((desc, i) => (
+                    <span key={i} className="rounded-lg bg-sky-50 px-2 py-1 text-xs font-bold text-sky-600">
+                      {desc}
+                    </span>
+                  ))}
+                </div>
+              </ResultCard>
+
+              <ResultCard title="Raw Sections" icon={DocumentTextIcon}>
+                <div className="max-h-40 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-200">
+                  {Object.keys(sections).map((section, i) => (
+                    <div key={i} className="mb-2 flex items-center justify-between rounded-lg bg-gray-50 px-3 py-2">
+                      <span className="text-xs font-bold text-gray-600 capitalize">{section}</span>
+                      <span className="text-[10px] font-bold text-gray-400">{sections[section].length} lines</span>
+                    </div>
+                  ))}
+                </div>
+              </ResultCard>
+
+            </div>
+          </div>
+
         </div>
       </div>
     </main>
