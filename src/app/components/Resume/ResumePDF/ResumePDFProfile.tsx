@@ -67,6 +67,11 @@ export const ResumePDFProfile = ({
                 break;
               }
               default: {
+                // Security: Prevent javascript: URIs
+                const sanitizedValue = value.trim().toLowerCase();
+                if (sanitizedValue.startsWith("javascript:")) {
+                  return <>{children}</>;
+                }
                 src = value.startsWith("http") ? value : `https://${value}`;
               }
             }

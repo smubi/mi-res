@@ -1,7 +1,12 @@
 import type { RootState } from "lib/redux/store";
 import CryptoJS from "crypto-js";
 
-// Reference: https://dev.to/igorovic/simplest-way-to-persist-redux-state-to-localstorage-e67
+/**
+ * Note: Encryption with a hardcoded key in client-side code provides no real security
+ * against an attacker with access to the browser. We've removed encryption for new
+ * data to avoid a false sense of security, but we keep the decryption logic as a 
+ * fallback for existing users' data.
+ */
 
 const LOCAL_STORAGE_KEY = "open-resume-state";
 const ENCRYPTION_KEY = "open-resume-security-key";
@@ -11,12 +16,12 @@ export const loadStateFromLocalStorage = () => {
     const storedState = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (!storedState) return undefined;
 
-    // Fallback for legacy unencrypted data
+    // If it's already a JSON string (new format), parse it directly
     if (storedState.startsWith("{")) {
       return JSON.parse(storedState);
     }
 
-    // Try to decrypt the state
+    // Fallback: Try to decrypt legacy encrypted data
     try {
       const bytes = CryptoJS.AES.decrypt(storedState, ENCRYPTION_KEY);
       const decryptedData = bytes.toString(CryptoJS.enc.Utf8);
@@ -24,7 +29,7 @@ export const loadStateFromLocalStorage = () => {
         return JSON.parse(decryptedData);
       }
     } catch (e) {
-      // If decryption fails, ignore and return undefined
+      // If decryption fails, it might be invalid or not encrypted
     }
 
     return undefined;
@@ -35,12 +40,9 @@ export const loadStateFromLocalStorage = () => {
 
 export const saveStateToLocalStorage = (state: RootState) => {
   try {
+    // We now save as plain JSON string since localStorage is already origin-isolated
     const stringifiedState = JSON.stringify(state);
-    const encryptedState = CryptoJS.AES.encrypt(
-      stringifiedState,
-      ENCRYPTION_KEY
-    ).toString();
-    localStorage.setItem(LOCAL_STORAGE_KEY, encryptedState);
+    localStorage.setItem(LOCAL_STORAGE_KEY, stringifiedState);
   } catch (e) {
     // Ignore
   }
