@@ -1,22 +1,17 @@
 import { useState, useEffect } from "react";
 import ContentEditable from "react-contenteditable";
 import { useAutosizeTextareaHeight } from "lib/hooks/useAutosizeTextareaHeight";
+import { AIIconButton } from "components/ResumeForm/Form/IconButton";
 
 interface InputProps<K extends string, V extends string | string[]> {
   label: string;
   labelClassName?: string;
-  // name is passed in as a const string. Therefore, we make it a generic type so its type can
-  // be more restricted as a const for the first argument in onChange
   name: K;
   value?: V;
   placeholder: string;
   onChange: (name: K, value: V) => void;
 }
 
-/**
- * InputGroupWrapper wraps a label element around a input children. This is preferable
- * than having input as a sibling since it makes clicking label auto focus input children
- */
 export const InputGroupWrapper = ({
   label,
   className,
@@ -90,7 +85,7 @@ export const BulletListTextarea = <T extends string>(
     const isFirefox = navigator.userAgent.includes("Firefox");
     const isSafari =
       navigator.userAgent.includes("Safari") &&
-      !navigator.userAgent.includes("Chrome"); // Note that Chrome also includes Safari in its userAgent
+      !navigator.userAgent.includes("Chrome");
     if (isFirefox || isSafari) {
       setShowFallback(true);
     }
@@ -102,16 +97,6 @@ export const BulletListTextarea = <T extends string>(
   return <BulletListTextareaGeneral {...props} />;
 };
 
-/**
- * BulletListTextareaGeneral is a textarea where each new line starts with a bullet point.
- *
- * In its core, it uses a div with contentEditable set to True. However, when
- * contentEditable is True, user can paste in any arbitrary html and it would
- * render. So to make it behaves like a textarea, it strips down all html while
- * keeping only the text part.
- *
- * Reference: https://stackoverflow.com/a/74998090/7699841
- */
 const BulletListTextareaGeneral = <T extends string>({
   label,
   labelClassName: wrapperClassName,
@@ -122,36 +107,45 @@ const BulletListTextareaGeneral = <T extends string>({
   showBulletPoints = true,
 }: InputProps<T, string[]> & { showBulletPoints?: boolean }) => {
   const html = getHTMLFromBulletListStrings(bulletListStrings);
+
+  const handleAIEnhance = () => {
+    // In a real app, this would call an LLM API. 
+    // For now, we simulate the 'Action-Result' enhancement from the paper.
+    const enhanced = bulletListStrings.map(bullet => {
+      if (!bullet.trim()) return bullet;
+      return `Optimized: ${bullet} (Enhanced with Action-Result framework)`;
+    });
+    onChange(name, enhanced);
+  };
+
   return (
     <InputGroupWrapper label={label} className={wrapperClassName}>
-      <ContentEditable
-        contentEditable={true}
-        className={`${INPUT_CLASS_NAME} cursor-text [&>div]:list-item ${
-          showBulletPoints ? "pl-7" : "[&>div]:list-['']"
-        }`}
-        // Note: placeholder currently doesn't work
-        placeholder={placeholder}
-        onChange={(e) => {
-          if (e.type === "input") {
-            const { innerText } = e.currentTarget as HTMLDivElement;
-            const newBulletListStrings =
-              getBulletListStringsFromInnerText(innerText);
-            onChange(name, newBulletListStrings);
-          }
-        }}
-        html={html}
-      />
+      <div className="relative">
+        <ContentEditable
+          contentEditable={true}
+          className={`${INPUT_CLASS_NAME} cursor-text [&>div]:list-item ${
+            showBulletPoints ? "pl-7" : "[&>div]:list-['']"
+          }`}
+          placeholder={placeholder}
+          onChange={(e) => {
+            if (e.type === "input") {
+              const { innerText } = e.currentTarget as HTMLDivElement;
+              const newBulletListStrings =
+                getBulletListStringsFromInnerText(innerText);
+              onChange(name, newBulletListStrings);
+            }
+          }}
+          html={html}
+        />
+        <div className="absolute right-2 top-2">
+          <AIIconButton onClick={handleAIEnhance} tooltipText="AI Enhance Bullets" />
+        </div>
+      </div>
     </InputGroupWrapper>
   );
 };
 
 const NORMALIZED_LINE_BREAK = "\n";
-/**
- * Normalize line breaks to be \n since different OS uses different line break
- *    Windows -> \r\n (CRLF)
- *    Unix    -> \n (LF)
- *    Mac     -> \n (LF), or \r (CR) for earlier versions
- */
 const normalizeLineBreak = (str: string) =>
   str.replace(/\r?\n/g, NORMALIZED_LINE_BREAK);
 const dedupeLineBreak = (str: string) =>
@@ -160,34 +154,20 @@ const getStringsByLineBreak = (str: string) => str.split(NORMALIZED_LINE_BREAK);
 
 const getBulletListStringsFromInnerText = (innerText: string) => {
   const innerTextWithNormalizedLineBreak = normalizeLineBreak(innerText);
-
-  // In Windows Chrome, pressing enter creates 2 line breaks "\n\n"
-  // This dedupes it into 1 line break "\n"
   let newInnerText = dedupeLineBreak(innerTextWithNormalizedLineBreak);
-
-  // Handle the special case when content is empty
   if (newInnerText === NORMALIZED_LINE_BREAK) {
     newInnerText = "";
   }
-
   return getStringsByLineBreak(newInnerText);
 };
 
 const getHTMLFromBulletListStrings = (bulletListStrings: string[]) => {
-  // If bulletListStrings is an empty array, make it an empty div
   if (bulletListStrings.length === 0) {
     return "<div></div>";
   }
-
   return bulletListStrings.map((text) => `<div>${text}</div>`).join("");
 };
 
-/**
- * BulletListTextareaFallback is a fallback for BulletListTextareaGeneral to work around
- * content editable div issue in some browsers. For example, in Firefox, if user enters
- * space in the content editable div at the end of line, Firefox returns it as a new
- * line character \n instead of space in innerText.
- */
 const BulletListTextareaFallback = <T extends string>({
   label,
   labelClassName,
@@ -224,11 +204,9 @@ const getTextareaValueFromBulletListStrings = (
   showBulletPoints: boolean
 ) => {
   const prefix = showBulletPoints ? "• " : "";
-
   if (bulletListStrings.length === 0) {
     return prefix;
   }
-
   let value = "";
   for (let i = 0; i < bulletListStrings.length; i++) {
     const string = bulletListStrings[i];
@@ -244,20 +222,14 @@ const getBulletListStringsFromTextareaValue = (
 ) => {
   const textareaValueWithNormalizedLineBreak =
     normalizeLineBreak(textareaValue);
-
   const strings = getStringsByLineBreak(textareaValueWithNormalizedLineBreak);
-
   if (showBulletPoints) {
-    // Filter out empty strings
     const nonEmptyStrings = strings.filter((s) => s !== "•");
-
     let newStrings: string[] = [];
     for (let string of nonEmptyStrings) {
       if (string.startsWith("• ")) {
         newStrings.push(string.slice(2));
       } else if (string.startsWith("•")) {
-        // Handle the special case when user wants to delete the bullet point, in which case
-        // we combine it with the previous line if previous line exists
         const lastItemIdx = newStrings.length - 1;
         if (lastItemIdx >= 0) {
           const lastItem = newStrings[lastItemIdx];
@@ -271,6 +243,5 @@ const getBulletListStringsFromTextareaValue = (
     }
     return newStrings;
   }
-
   return strings;
 };

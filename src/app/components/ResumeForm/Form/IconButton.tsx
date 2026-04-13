@@ -7,6 +7,7 @@ import {
   TrashIcon,
   ListBulletIcon,
 } from "@heroicons/react/24/outline";
+import { Sparkles } from "lucide-react";
 
 export const ShowIconButton = ({
   show,
@@ -94,6 +95,26 @@ export const BulletListIconButton = ({
         }`}
         aria-hidden="true"
       />
+      <span className="sr-only">{tooltipText}</span>
+    </IconButton>
+  );
+};
+
+export const AIIconButton = ({
+  onClick,
+  tooltipText = "AI Enhance",
+}: {
+  onClick: () => void;
+  tooltipText?: string;
+}) => {
+  return (
+    <IconButton
+      onClick={onClick}
+      tooltipText={tooltipText}
+      size="small"
+      className="hover:bg-purple-50"
+    >
+      <Sparkles className="h-4 w-4 text-purple-500" aria-hidden="true" />
       <span className="sr-only">{tooltipText}</span>
     </IconButton>
   );
