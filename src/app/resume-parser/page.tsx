@@ -11,6 +11,7 @@ import { DropzoneOverlay } from "resume-parser/DropzoneOverlay";
 import { ResultCard } from "resume-parser/ResultCard";
 import { ResumeGrade } from "resume-parser/ResumeGrade";
 import { PlainTextPreview } from "resume-parser/PlainTextPreview";
+import { ATSDiagnosticPanel } from "resume-parser/ATSDiagnosticPanel";
 import { saveStateToLocalStorage } from "lib/redux/local-storage";
 import { initialSettings } from "lib/redux/settingsSlice";
 import { 
@@ -99,39 +100,43 @@ export default function ResumeParser() {
         <div className="grid gap-8 lg:grid-cols-12">
           
           <div className="lg:col-span-5">
-            <div className="sticky top-8 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl">
-              <div className="flex items-center justify-between border-b border-gray-100 bg-gray-50/50 px-4 py-3">
-                <div className="flex rounded-lg bg-gray-200 p-1">
-                  <button 
-                    onClick={() => setViewMode("preview")}
-                    className={`flex items-center gap-1.5 rounded-md px-3 py-1 text-[10px] font-bold uppercase transition-all ${viewMode === 'preview' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
-                  >
-                    <EyeIcon className="h-3 w-3" />
-                    Preview
-                  </button>
-                  <button 
-                    onClick={() => setViewMode("text")}
-                    className={`flex items-center gap-1.5 rounded-md px-3 py-1 text-[10px] font-bold uppercase transition-all ${viewMode === 'text' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
-                  >
-                    <CommandLineIcon className="h-3 w-3" />
-                    ATS View
-                  </button>
+            <div className="sticky top-8 space-y-6">
+              <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl">
+                <div className="flex items-center justify-between border-b border-gray-100 bg-gray-50/50 px-4 py-3">
+                  <div className="flex rounded-lg bg-gray-200 p-1">
+                    <button 
+                      onClick={() => setViewMode("preview")}
+                      className={`flex items-center gap-1.5 rounded-md px-3 py-1 text-[10px] font-bold uppercase transition-all ${viewMode === 'preview' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                    >
+                      <EyeIcon className="h-3 w-3" />
+                      Preview
+                    </button>
+                    <button 
+                      onClick={() => setViewMode("text")}
+                      className={`flex items-center gap-1.5 rounded-md px-3 py-1 text-[10px] font-bold uppercase transition-all ${viewMode === 'text' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                    >
+                      <CommandLineIcon className="h-3 w-3" />
+                      ATS View
+                    </button>
+                  </div>
+                  <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Document View</span>
                 </div>
-                <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Document View</span>
+                
+                <div className="aspect-[1/1.4] w-full">
+                  {viewMode === "preview" ? (
+                    <iframe 
+                      src={`${fileUrl}#navpanes=0&toolbar=0`} 
+                      className={isLoading ? "opacity-20 transition-opacity" : "h-full w-full transition-opacity"} 
+                    />
+                  ) : (
+                    <div className="h-full p-4">
+                      <PlainTextPreview textItems={textItems} />
+                    </div>
+                  )}
+                </div>
               </div>
               
-              <div className="aspect-[1/1.4] w-full">
-                {viewMode === "preview" ? (
-                  <iframe 
-                    src={`${fileUrl}#navpanes=0&toolbar=0`} 
-                    className={isLoading ? "opacity-20 transition-opacity" : "h-full w-full transition-opacity"} 
-                  />
-                ) : (
-                  <div className="h-full p-4">
-                    <PlainTextPreview textItems={textItems} />
-                  </div>
-                )}
-              </div>
+              <ATSDiagnosticPanel textItems={textItems} lines={lines} />
             </div>
           </div>
 
