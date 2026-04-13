@@ -23,6 +23,7 @@ import { ResumeSnapshots } from "./ResumeSnapshots";
 import { InterviewPrep } from "./InterviewPrep";
 import { VerbLibrary } from "./VerbLibrary";
 import { QuantificationNudge } from "./QuantificationNudge";
+import { LiveGrader } from "./LiveGrader";
 import { FlexboxSpacer } from "components/FlexboxSpacer";
 import { FormTabs, TabType } from "./FormTabs";
 import { cx } from "lib/cx";
@@ -68,6 +69,7 @@ export const ResumeForm = () => {
 
           {activeTab === "optimize" && (
             <>
+              <LiveGrader />
               <JobDescriptionForm />
               <ResumeAnalysis />
               <QuantificationNudge />
