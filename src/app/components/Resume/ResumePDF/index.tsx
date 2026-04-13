@@ -1,4 +1,4 @@
-import { Page, View, Document } from "@react-pdf/renderer";
+...import { Page, View, Document } from "@react-pdf/renderer";
 import { styles, spacing } from "components/Resume/ResumePDF/styles";
 import { ResumePDFProfile } from "components/Resume/ResumePDF/ResumePDFProfile";
 import { ResumePDFWorkExperience } from "components/Resume/ResumePDF/ResumePDFWorkExperience";
@@ -55,14 +55,14 @@ export const ResumePDF = ({
     workExperiences: () => (
       <ResumePDFWorkExperience
         heading={formToHeading["workExperiences"]}
-        workExperiences={workExperiences}
+        workExperiences={workExperiences.filter((item) => !item.isHidden)}
         themeColor={themeColor}
       />
     ),
     educations: () => (
       <ResumePDFEducation
         heading={formToHeading["educations"]}
-        educations={educations}
+        educations={educations.filter((item) => !item.isHidden)}
         themeColor={themeColor}
         showBulletPoints={showBulletPoints["educations"]}
       />
@@ -70,7 +70,7 @@ export const ResumePDF = ({
     projects: () => (
       <ResumePDFProject
         heading={formToHeading["projects"]}
-        projects={projects}
+        projects={projects.filter((item) => !item.isHidden)}
         themeColor={themeColor}
       />
     ),

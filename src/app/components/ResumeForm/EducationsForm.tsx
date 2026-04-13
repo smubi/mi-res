@@ -22,7 +22,7 @@ export const EducationsForm = () => {
 
   return (
     <Form form={form} addButtonText="Add School">
-      {educations.map(({ school, degree, gpa, date, descriptions }, idx) => {
+      {educations.map(({ school, degree, gpa, date, descriptions, isHidden }, idx) => {
         const handleEducationChange = (
           ...[
             field,
@@ -48,6 +48,7 @@ export const EducationsForm = () => {
             showMoveDown={showMoveDown}
             showDelete={showDelete}
             deleteButtonTooltipText="Delete school"
+            isHidden={isHidden}
           >
             <Input
               label="School"

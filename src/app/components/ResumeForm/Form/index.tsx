@@ -26,6 +26,7 @@ import {
   addSectionInForm,
   deleteSectionInFormByIdx,
   moveSectionInForm,
+  changeSectionVisibility,
 } from "lib/redux/resumeSlice";
 
 /**
@@ -140,6 +141,7 @@ export const FormSection = ({
   showMoveDown,
   showDelete,
   deleteButtonTooltipText,
+  isHidden,
   children,
 }: {
   form: ShowForm;
@@ -148,6 +150,7 @@ export const FormSection = ({
   showMoveDown: boolean;
   showDelete: boolean;
   deleteButtonTooltipText: string;
+  isHidden?: boolean;
   children: React.ReactNode;
 }) => {
   const dispatch = useAppDispatch();
@@ -156,6 +159,9 @@ export const FormSection = ({
   };
   const handleMoveClick = (direction: "up" | "down") => {
     dispatch(moveSectionInForm({ form, direction, idx }));
+  };
+  const handleHideClick = (show: boolean) => {
+    dispatch(changeSectionVisibility({ form, idx, isHidden: !show }));
   };
 
   return (
@@ -198,6 +204,15 @@ export const FormSection = ({
               tooltipText={deleteButtonTooltipText}
             />
           </div>
+          {isHidden !== undefined && (
+            <div className={`transition-all duration-300`}>
+              <ShowIconButton
+                show={!isHidden}
+                setShow={handleHideClick}
+                size="small"
+              />
+            </div>
+          )}
         </div>
       </div>
     </>

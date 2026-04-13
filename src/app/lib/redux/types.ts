@@ -12,6 +12,7 @@ export interface ResumeWorkExperience {
   jobTitle: string;
   date: string;
   descriptions: string[];
+  isHidden?: boolean;
 }
 
 export interface ResumeEducation {
@@ -20,12 +21,14 @@ export interface ResumeEducation {
   date: string;
   gpa: string;
   descriptions: string[];
+  isHidden?: boolean;
 }
 
 export interface ResumeProject {
   project: string;
   date: string;
   descriptions: string[];
+  isHidden?: boolean;
 }
 
 export interface FeaturedSkill {

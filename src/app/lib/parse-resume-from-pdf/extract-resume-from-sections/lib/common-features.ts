@@ -20,7 +20,9 @@ const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 
 const hasMonth = (item: TextItem) =>
   MONTHS.some(
     (month) =>
-      item.text.includes(month) || item.text.includes(month.slice(0, 4))
+      item.text.includes(month) ||
+      item.text.includes(month.slice(0, 4)) ||
+      item.text.includes(month.slice(0, 3))
   );
 const SEASONS = ["Summer", "Fall", "Spring", "Winter"];
 const hasSeason = (item: TextItem) =>

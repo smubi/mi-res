@@ -16,7 +16,7 @@ export const ProjectsForm = () => {
 
   return (
     <Form form="projects" addButtonText="Add Project">
-      {projects.map(({ project, date, descriptions }, idx) => {
+      {projects.map(({ project, date, descriptions, isHidden }, idx) => {
         const handleProjectChange = (
           ...[
             field,
@@ -48,6 +48,7 @@ export const ProjectsForm = () => {
             showMoveDown={showMoveDown}
             showDelete={showDelete}
             deleteButtonTooltipText={"Delete project"}
+            isHidden={isHidden}
           >
             <Input
               name="project"
