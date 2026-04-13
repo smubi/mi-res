@@ -6,19 +6,19 @@ import {
   useSetInitialStore,
 } from "lib/redux/hooks";
 import { ShowForm, selectFormsOrder } from "lib/redux/settingsSlice";
-import { ProfileForm } from "components/ResumeForm/ProfileForm";
-import { WorkExperiencesForm } from "components/ResumeForm/WorkExperiencesForm";
-import { EducationsForm } from "components/ResumeForm/EducationsForm";
-import { ProjectsForm } from "components/ResumeForm/ProjectsForm";
-import { SkillsForm } from "components/ResumeForm/SkillsForm";
-import { ThemeForm } from "components/ResumeForm/ThemeForm";
-import { CustomForm } from "components/ResumeForm/CustomForm";
-import { JobDescriptionForm } from "components/ResumeForm/JobDescriptionForm";
-import { ResumeAnalysis } from "components/ResumeForm/ResumeAnalysis";
-import { SmartSuggestions } from "components/ResumeForm/SmartSuggestions";
-import { CoverLetterGenerator } from "components/ResumeForm/CoverLetterGenerator";
+import { ProfileForm } from "./ProfileForm";
+import { WorkExperiencesForm } from "./WorkExperiencesForm";
+import { EducationsForm } from "./EducationsForm";
+import { ProjectsForm } from "./ProjectsForm";
+import { SkillsForm } from "./SkillsForm";
+import { ThemeForm } from "./ThemeForm";
+import { CustomForm } from "./CustomForm";
+import { JobDescriptionForm } from "./JobDescriptionForm";
+import { ResumeAnalysis } from "./ResumeAnalysis";
+import { SmartSuggestions } from "./SmartSuggestions";
+import { CoverLetterGenerator } from "./CoverLetterGenerator";
 import { FlexboxSpacer } from "components/FlexboxSpacer";
-import { FormTabs, TabType } from "components/ResumeForm/FormTabs";
+import { FormTabs, TabType } from "./FormTabs";
 import { cx } from "lib/cx";
 
 const formTypeToComponent: { [type in ShowForm]: () => JSX.Element } = {
