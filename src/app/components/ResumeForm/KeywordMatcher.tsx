@@ -16,7 +16,11 @@ export const KeywordMatcher = () => {
 
     const resumeText = JSON.stringify(resume).toLowerCase();
     
-    const matches = jdWords.filter(word => resumeText.includes(word));
+    const matches = jdWords.map(word => {
+      const count = (resumeText.match(new RegExp(`\\b${word}\\b`, 'g')) || []).length;
+      return { word, count };
+    }).filter(m => m.count > 0);
+
     const missing = jdWords.filter(word => !resumeText.includes(word)).slice(0, 12);
     
     const score = jdWords.length > 0 ? Math.round((matches.length / jdWords.length) * 100) : 0;
@@ -44,9 +48,10 @@ export const KeywordMatcher = () => {
         <div className="space-y-2">
           <h4 className="text-xs font-bold text-green-700 uppercase">Matched ({analysis.matches.length})</h4>
           <div className="flex flex-wrap gap-1.5">
-            {analysis.matches.slice(0, 10).map(word => (
-              <span key={word} className="rounded-md bg-green-50 px-2 py-0.5 text-[10px] font-bold text-green-700 border border-green-100">
+            {analysis.matches.slice(0, 10).map(({ word, count }) => (
+              <span key={word} className="flex items-center gap-1 rounded-md bg-green-50 px-2 py-0.5 text-[10px] font-bold text-green-700 border border-green-100">
                 {word}
+                <span className="flex h-3 w-3 items-center justify-center rounded-full bg-green-200 text-[8px]">{count}</span>
               </span>
             ))}
           </div>

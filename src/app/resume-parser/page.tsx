@@ -10,6 +10,7 @@ import { extractResumeFromSections } from "lib/parse-resume-from-pdf/extract-res
 import { DropzoneOverlay } from "resume-parser/DropzoneOverlay";
 import { ResultCard } from "resume-parser/ResultCard";
 import { ResumeGrade } from "resume-parser/ResumeGrade";
+import { PlainTextPreview } from "resume-parser/PlainTextPreview";
 import { saveStateToLocalStorage } from "lib/redux/local-storage";
 import { initialSettings } from "lib/redux/settingsSlice";
 import { 
@@ -19,7 +20,9 @@ import {
   WrenchIcon,
   DocumentTextIcon,
   ArrowUpTrayIcon,
-  SparklesIcon
+  SparklesIcon,
+  CommandLineIcon,
+  EyeIcon
 } from "@heroicons/react/24/outline";
 
 export default function ResumeParser() {
@@ -27,6 +30,7 @@ export default function ResumeParser() {
   const [fileUrl, setFileUrl] = useState("resume-example/laverne-resume.pdf");
   const [textItems, setTextItems] = useState<TextItems>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [viewMode, setViewMode] = useState<"preview" | "text">("preview");
 
   const lines = groupTextItemsIntoLines(textItems || []);
   const sections = groupLinesIntoSections(lines);
@@ -60,7 +64,6 @@ export default function ResumeParser() {
     <main className="min-h-screen bg-gray-50/50 pb-20">
       <DropzoneOverlay onDrop={handleFileDrop} />
       
-      {/* Header */}
       <div className="bg-white border-b border-gray-100 py-12">
         <div className="mx-auto max-w-5xl px-6 text-center">
           <h1 className="text-4xl font-black tracking-tight text-gray-900 sm:text-5xl">
@@ -95,27 +98,43 @@ export default function ResumeParser() {
       <div className="mx-auto mt-12 max-w-7xl px-6">
         <div className="grid gap-8 lg:grid-cols-12">
           
-          {/* PDF Preview */}
           <div className="lg:col-span-5">
             <div className="sticky top-8 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl">
               <div className="flex items-center justify-between border-b border-gray-100 bg-gray-50/50 px-4 py-3">
-                <div className="flex gap-1.5">
-                  <div className="h-3 w-3 rounded-full bg-red-400" />
-                  <div className="h-3 w-3 rounded-full bg-amber-400" />
-                  <div className="h-3 w-3 rounded-full bg-green-400" />
+                <div className="flex rounded-lg bg-gray-200 p-1">
+                  <button 
+                    onClick={() => setViewMode("preview")}
+                    className={`flex items-center gap-1.5 rounded-md px-3 py-1 text-[10px] font-bold uppercase transition-all ${viewMode === 'preview' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                  >
+                    <EyeIcon className="h-3 w-3" />
+                    Preview
+                  </button>
+                  <button 
+                    onClick={() => setViewMode("text")}
+                    className={`flex items-center gap-1.5 rounded-md px-3 py-1 text-[10px] font-bold uppercase transition-all ${viewMode === 'text' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                  >
+                    <CommandLineIcon className="h-3 w-3" />
+                    ATS View
+                  </button>
                 </div>
-                <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Document Preview</span>
+                <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Document View</span>
               </div>
+              
               <div className="aspect-[1/1.4] w-full">
-                <iframe 
-                  src={`${fileUrl}#navpanes=0&toolbar=0`} 
-                  className={isLoading ? "opacity-20 transition-opacity" : "h-full w-full transition-opacity"} 
-                />
+                {viewMode === "preview" ? (
+                  <iframe 
+                    src={`${fileUrl}#navpanes=0&toolbar=0`} 
+                    className={isLoading ? "opacity-20 transition-opacity" : "h-full w-full transition-opacity"} 
+                  />
+                ) : (
+                  <div className="h-full p-4">
+                    <PlainTextPreview textItems={textItems} />
+                  </div>
+                )}
               </div>
             </div>
           </div>
 
-          {/* Results Grid */}
           <div className="lg:col-span-7">
             <ResumeGrade resume={resume} />
             
