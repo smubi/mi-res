@@ -3,11 +3,12 @@
 import { 
   PencilSquareIcon, 
   SparklesIcon, 
-  PaintBrushIcon 
+  PaintBrushIcon,
+  EnvelopeIcon
 } from "@heroicons/react/24/outline";
 import { cx } from "lib/cx";
 
-export type TabType = "content" | "optimize" | "design";
+export type TabType = "content" | "optimize" | "design" | "cover-letter";
 
 interface FormTabsProps {
   activeTab: TabType;
@@ -18,6 +19,7 @@ export const FormTabs = ({ activeTab, onChange }: FormTabsProps) => {
   const tabs = [
     { id: "content", label: "Content", icon: PencilSquareIcon },
     { id: "optimize", label: "AI Optimize", icon: SparklesIcon },
+    { id: "cover-letter", label: "Cover Letter", icon: EnvelopeIcon },
     { id: "design", label: "Design", icon: PaintBrushIcon },
   ] as const;
 
@@ -30,7 +32,7 @@ export const FormTabs = ({ activeTab, onChange }: FormTabsProps) => {
             key={tab.id}
             onClick={() => onChange(tab.id)}
             className={cx(
-              "flex flex-1 items-center justify-center gap-2 py-4 text-xs font-bold uppercase tracking-widest transition-all",
+              "flex flex-1 items-center justify-center gap-2 py-4 text-[10px] sm:text-xs font-bold uppercase tracking-widest transition-all",
               isActive 
                 ? "border-b-2 border-sky-500 text-sky-600" 
                 : "text-gray-400 hover:bg-gray-50 hover:text-gray-600"

@@ -16,6 +16,7 @@ import { CustomForm } from "components/ResumeForm/CustomForm";
 import { JobDescriptionForm } from "components/ResumeForm/JobDescriptionForm";
 import { ResumeAnalysis } from "components/ResumeForm/ResumeAnalysis";
 import { SmartSuggestions } from "components/ResumeForm/SmartSuggestions";
+import { CoverLetterForm } from "components/ResumeForm/CoverLetterForm";
 import { FlexboxSpacer } from "components/FlexboxSpacer";
 import { FormTabs, TabType } from "components/ResumeForm/FormTabs";
 import { cx } from "lib/cx";
@@ -65,6 +66,10 @@ export const ResumeForm = () => {
               <ResumeAnalysis />
               <SmartSuggestions />
             </>
+          )}
+
+          {activeTab === "cover-letter" && (
+            <CoverLetterForm />
           )}
 
           {activeTab === "design" && (
