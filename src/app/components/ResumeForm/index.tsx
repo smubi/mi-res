@@ -15,6 +15,7 @@ import { ThemeForm } from "components/ResumeForm/ThemeForm";
 import { CustomForm } from "components/ResumeForm/CustomForm";
 import { JobDescriptionForm } from "components/ResumeForm/JobDescriptionForm";
 import { ResumeAnalysis } from "components/ResumeForm/ResumeAnalysis";
+import { SmartSuggestions } from "components/ResumeForm/SmartSuggestions";
 import { FlexboxSpacer } from "components/FlexboxSpacer";
 import { cx } from "lib/cx";
 
@@ -45,6 +46,7 @@ export const ResumeForm = () => {
       <section className="flex max-w-2xl flex-col gap-8 p-[var(--resume-padding)]">
         <JobDescriptionForm />
         <ResumeAnalysis />
+        <SmartSuggestions />
         <ProfileForm />
         {formsOrder.map((form) => {
           const Component = formTypeToComponent[form];
