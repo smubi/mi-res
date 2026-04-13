@@ -10,6 +10,7 @@ import {
   selectWorkExperiences,
 } from "lib/redux/resumeSlice";
 import type { ResumeWorkExperience } from "lib/redux/types";
+import { AIOptimizer } from "components/ResumeForm/AIOptimizer";
 
 export const WorkExperiencesForm = () => {
   const workExperiences = useAppSelector(selectWorkExperiences);
@@ -26,11 +27,20 @@ export const WorkExperiencesForm = () => {
             value,
           ]: CreateHandleChangeArgsWithDescriptions<ResumeWorkExperience>
         ) => {
-          // TS doesn't support passing union type to single call signature
-          // https://github.com/microsoft/TypeScript/issues/54027
-          // any is used here as a workaround
           dispatch(changeWorkExperiences({ idx, field, value } as any));
         };
+        
+        const handleAIOptimize = (newText: string) => {
+          const newDescriptions = [...descriptions];
+          // Optimize the last bullet point or add a new one if empty
+          if (newDescriptions.length > 0) {
+            newDescriptions[newDescriptions.length - 1] = newText;
+          } else {
+            newDescriptions.push(newText);
+          }
+          handleWorkExperienceChange("descriptions", newDescriptions);
+        };
+
         const showMoveUp = idx !== 0;
         const showMoveDown = idx !== workExperiences.length - 1;
 
@@ -68,14 +78,21 @@ export const WorkExperiencesForm = () => {
               value={date}
               onChange={handleWorkExperienceChange}
             />
-            <BulletListTextarea
-              label="Description"
-              labelClassName="col-span-full"
-              name="descriptions"
-              placeholder="Bullet points"
-              value={descriptions}
-              onChange={handleWorkExperienceChange}
-            />
+            <div className="col-span-full space-y-2">
+              <div className="flex items-center justify-between">
+                <label className="text-base font-medium text-gray-700">Description</label>
+                <AIOptimizer 
+                  currentText={descriptions[descriptions.length - 1] || ""} 
+                  onOptimize={handleAIOptimize} 
+                />
+              </div>
+              <BulletListTextarea
+                name="descriptions"
+                placeholder="Bullet points"
+                value={descriptions}
+                onChange={handleWorkExperienceChange}
+              />
+            </div>
           </FormSection>
         );
       })}
