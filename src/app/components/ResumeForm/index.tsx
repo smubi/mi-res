@@ -17,6 +17,7 @@ import { JobDescriptionForm } from "./JobDescriptionForm";
 import { ResumeAnalysis } from "./ResumeAnalysis";
 import { SmartSuggestions } from "./SmartSuggestions";
 import { CoverLetterGenerator } from "./CoverLetterGenerator";
+import { ResumeChecklist } from "./ResumeChecklist";
 import { FlexboxSpacer } from "components/FlexboxSpacer";
 import { FormTabs, TabType } from "./FormTabs";
 import { cx } from "lib/cx";
@@ -64,6 +65,7 @@ export const ResumeForm = () => {
             <>
               <JobDescriptionForm />
               <ResumeAnalysis />
+              <ResumeChecklist />
               <CoverLetterGenerator />
               <SmartSuggestions />
             </>
