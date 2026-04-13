@@ -7,6 +7,7 @@ import type { CreateHandleChangeArgsWithDescriptions } from "components/ResumeFo
 import { useAppDispatch, useAppSelector } from "lib/redux/hooks";
 import { selectProjects, changeProjects } from "lib/redux/resumeSlice";
 import type { ResumeProject } from "lib/redux/types";
+import { AIOptimizer } from "components/ResumeForm/AIOptimizer";
 
 export const ProjectsForm = () => {
   const projects = useAppSelector(selectProjects);
@@ -24,6 +25,17 @@ export const ProjectsForm = () => {
         ) => {
           dispatch(changeProjects({ idx, field, value } as any));
         };
+
+        const handleAIOptimize = (newText: string) => {
+          const newDescriptions = [...descriptions];
+          if (newDescriptions.length > 0) {
+            newDescriptions[newDescriptions.length - 1] = newText;
+          } else {
+            newDescriptions.push(newText);
+          }
+          handleProjectChange("descriptions", newDescriptions);
+        };
+
         const showMoveUp = idx !== 0;
         const showMoveDown = idx !== projects.length - 1;
 
@@ -53,14 +65,21 @@ export const ProjectsForm = () => {
               onChange={handleProjectChange}
               labelClassName="col-span-2"
             />
-            <BulletListTextarea
-              name="descriptions"
-              label="Description"
-              placeholder="Bullet points"
-              value={descriptions}
-              onChange={handleProjectChange}
-              labelClassName="col-span-full"
-            />
+            <div className="col-span-full space-y-2">
+              <div className="flex items-center justify-between">
+                <label className="text-base font-medium text-gray-700">Description</label>
+                <AIOptimizer 
+                  currentText={descriptions[descriptions.length - 1] || ""} 
+                  onOptimize={handleAIOptimize} 
+                />
+              </div>
+              <BulletListTextarea
+                name="descriptions"
+                placeholder="Bullet points"
+                value={descriptions}
+                onChange={handleProjectChange}
+              />
+            </div>
           </FormSection>
         );
       })}
