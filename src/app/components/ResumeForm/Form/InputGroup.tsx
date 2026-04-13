@@ -173,13 +173,24 @@ const getBulletListStringsFromInnerText = (innerText: string) => {
   return getStringsByLineBreak(newInnerText);
 };
 
+const escapeHTML = (str: string) => {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+};
+
 const getHTMLFromBulletListStrings = (bulletListStrings: string[]) => {
   // If bulletListStrings is an empty array, make it an empty div
   if (bulletListStrings.length === 0) {
     return "<div></div>";
   }
 
-  return bulletListStrings.map((text) => `<div>${text}</div>`).join("");
+  return bulletListStrings
+    .map((text) => `<div>${escapeHTML(text)}</div>`)
+    .join("");
 };
 
 /**
