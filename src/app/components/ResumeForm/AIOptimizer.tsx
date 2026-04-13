@@ -1,3 +1,5 @@
+"use client";
+
 import { SparklesIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
 import { useAppSelector } from "lib/redux/hooks";
