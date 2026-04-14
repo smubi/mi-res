@@ -19,6 +19,7 @@ import {
 import { NonEnglishFontsCSSLazyLoader } from "components/fonts/NonEnglishFontsCSSLoader";
 import { ATSScoreBadge } from "components/Resume/ATSScoreBadge";
 import { ATSView } from "components/Resume/ATSView";
+import { RecruiterThoughts } from "components/Resume/RecruiterThoughts";
 import { EyeIcon, CommandLineIcon, FireIcon, ClockIcon, ShareIcon } from "@heroicons/react/24/outline";
 import { cx } from "lib/cx";
 
@@ -43,6 +44,18 @@ export const Resume = () => {
     const name = resume.profile.name || "Resume";
     return jobTitle ? `${name} - ${jobTitle}` : `${name} - Resume`;
   }, [resume.profile.name, jobTitle]);
+
+  const scannabilityScore = useMemo(() => {
+    const checks = [
+      !!(resume.profile.name && resume.profile.email),
+      resume.workExperiences.length > 0 && !!resume.workExperiences[0].jobTitle,
+      resume.workExperiences.every(w => /\d{4}/.test(w.date)),
+      resume.educations.length > 0,
+      settings.formToHeading.workExperiences === settings.formToHeading.workExperiences.toUpperCase(),
+      resume.workExperiences.every(w => w.descriptions.length <= 6)
+    ];
+    return Math.round((checks.filter(Boolean).length / checks.length) * 100);
+  }, [resume, settings]);
 
   useRegisterReactPDFFont();
   useRegisterReactPDFHyphenationCallback(settings.fontFamily);
@@ -137,6 +150,17 @@ export const Resume = () => {
 
           <ATSScoreBadge />
           
+          <div className="absolute left-4 top-4 z-20 flex items-center gap-2 rounded-full bg-white/90 px-3 py-1.5 shadow-lg backdrop-blur-sm border border-orange-100">
+            <EyeIcon className="h-4 w-4 text-orange-500" />
+            <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">Scannability:</span>
+            <span className={cx(
+              "text-sm font-black",
+              scannabilityScore > 80 ? "text-green-600" : scannabilityScore > 50 ? "text-orange-500" : "text-red-500"
+            )}>
+              {scannabilityScore}%
+            </span>
+          </div>
+          
           {(showHeatmap || showPath || isSimulating) && (
             <div className="absolute right-4 top-4 z-40 flex flex-col gap-2 rounded-lg border border-gray-200 bg-white/90 p-3 shadow-sm backdrop-blur-sm dark:border-gray-700 dark:bg-gray-800/90">
               <div className="flex items-center justify-between gap-4">
@@ -163,6 +187,8 @@ export const Resume = () => {
               )}
             </div>
           )}
+
+          {isSimulating && <RecruiterThoughts timeLeft={timeLeft} />}
 
           <section className="h-[calc(100vh-var(--top-nav-bar-height)-var(--resume-control-bar-height))] overflow-hidden md:p-[var(--resume-padding)]">
 
