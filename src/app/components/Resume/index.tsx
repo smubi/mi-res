@@ -19,13 +19,14 @@ import {
 import { NonEnglishFontsCSSLazyLoader } from "components/fonts/NonEnglishFontsCSSLoader";
 import { ATSScoreBadge } from "components/Resume/ATSScoreBadge";
 import { ATSView } from "components/Resume/ATSView";
-import { EyeIcon, CommandLineIcon, FireIcon, ClockIcon } from "@heroicons/react/24/outline";
+import { EyeIcon, CommandLineIcon, FireIcon, ClockIcon, ShareIcon } from "@heroicons/react/24/outline";
 import { cx } from "lib/cx";
 
 export const Resume = () => {
   const [scale, setScale] = useState(0.8);
   const [viewMode, setViewMode] = useState<"pdf" | "ats">("pdf");
   const [showHeatmap, setShowHeatmap] = useState(false);
+  const [showPath, setShowPath] = useState(false);
   const [isSimulating, setIsSimulating] = useState(false);
   const [timeLeft, setTimeLeft] = useState(6);
   
@@ -49,6 +50,7 @@ export const Resume = () => {
   const startSimulation = () => {
     setIsSimulating(true);
     setShowHeatmap(true);
+    setShowPath(true);
     setTimeLeft(6);
   };
 
@@ -59,6 +61,7 @@ export const Resume = () => {
     } else if (timeLeft === 0) {
       setIsSimulating(false);
       setShowHeatmap(false);
+      setShowPath(false);
     }
   }, [isSimulating, timeLeft]);
 
@@ -106,6 +109,18 @@ export const Resume = () => {
               <FireIcon className="h-5 w-5" />
             </button>
             <button
+              onClick={() => setShowPath(!showPath)}
+              className={cx(
+                "flex h-10 w-10 items-center justify-center rounded-xl border shadow-sm transition-all",
+                showPath
+                  ? 'bg-purple-600 text-white border-purple-500 ring-2 ring-purple-100 dark:ring-purple-900/20'
+                  : 'bg-white text-gray-400 border-gray-100 hover:text-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-500 dark:hover:text-gray-300'
+              )}
+              title="Scanning Path (F-Pattern)"
+            >
+              <ShareIcon className="h-5 w-5" />
+            </button>
+            <button
               onClick={startSimulation}
               disabled={isSimulating}
               className={cx(
@@ -122,21 +137,30 @@ export const Resume = () => {
 
           <ATSScoreBadge />
           
-          {(showHeatmap || isSimulating) && (
+          {(showHeatmap || showPath || isSimulating) && (
             <div className="absolute right-4 top-4 z-40 flex flex-col gap-2 rounded-lg border border-gray-200 bg-white/90 p-3 shadow-sm backdrop-blur-sm dark:border-gray-700 dark:bg-gray-800/90">
               <div className="flex items-center justify-between gap-4">
                 <div className="text-xs font-semibold text-gray-500 dark:text-gray-400">
-                  {isSimulating ? `Scanning... ${timeLeft}s` : 'Recruiter Focus'}
+                  {isSimulating ? `Scanning... ${timeLeft}s` : showPath ? 'Scanning Path' : 'Recruiter Focus'}
                 </div>
                 {isSimulating && <div className="h-2 w-2 animate-ping rounded-full bg-purple-500" />}
               </div>
-              <div className="flex items-center gap-2">
-                <div className="h-3 w-24 rounded-full bg-gradient-to-r from-blue-500 via-green-500 via-yellow-500 to-red-500" />
-              </div>
-              <div className="flex justify-between text-[10px] text-gray-400">
-                <span>Low</span>
-                <span>High</span>
-              </div>
+              {!showPath && (
+                <>
+                  <div className="flex items-center gap-2">
+                    <div className="h-3 w-24 rounded-full bg-gradient-to-r from-blue-500 via-green-500 via-yellow-500 to-red-500" />
+                  </div>
+                  <div className="flex justify-between text-[10px] text-gray-400">
+                    <span>Low</span>
+                    <span>High</span>
+                  </div>
+                </>
+              )}
+              {showPath && (
+                <div className="text-[10px] text-purple-600 font-bold">
+                  F-SHAPED PATTERN ACTIVE
+                </div>
+              )}
             </div>
           )}
 
@@ -149,6 +173,7 @@ export const Resume = () => {
                 resume={resume}
                 enablePDFViewer={DEBUG_RESUME_PDF_FLAG}
                 showHeatmap={showHeatmap}
+                showPath={showPath}
               >
                 <ResumePDF
                   resume={resume}

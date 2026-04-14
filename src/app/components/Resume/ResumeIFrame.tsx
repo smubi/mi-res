@@ -53,6 +53,7 @@ const ResumeIframe = ({
   resume,
   enablePDFViewer = false,
   showHeatmap = false,
+  showPath = false,
 }: {
   documentSize: string;
   scale: number;
@@ -60,6 +61,7 @@ const ResumeIframe = ({
   resume: Resume;
   enablePDFViewer?: boolean;
   showHeatmap?: boolean;
+  showPath?: boolean;
 }) => {
   const isA4 = documentSize === "A4";
   const iframeInitialContent = useMemo(
@@ -100,7 +102,14 @@ const ResumeIframe = ({
         >
           {children}
         </Frame>
-        {showHeatmap && <HeatmapOverlay width={width} height={height} resume={resume} />}
+        {(showHeatmap || showPath) && (
+          <HeatmapOverlay 
+            width={width} 
+            height={height} 
+            resume={resume} 
+            showPath={showPath} 
+          />
+        )}
       </div>
     </div>
   );
