@@ -146,6 +146,7 @@ export const Resume = () => {
               <ResumeIframeCSR
                 documentSize={settings.documentSize}
                 scale={scale}
+                resume={resume}
                 enablePDFViewer={DEBUG_RESUME_PDF_FLAG}
                 showHeatmap={showHeatmap}
               >

@@ -12,26 +12,22 @@ import {
 import dynamic from "next/dynamic";
 import { getAllFontFamiliesToLoad } from "components/fonts/lib";
 import { HeatmapOverlay } from "./HeatmapOverlay";
+import type { Resume } from "lib/redux/types";
 
 const getIframeInitialContent = (isA4: boolean) => {
-
   const width = isA4 ? A4_WIDTH_PT : LETTER_WIDTH_PT;
   const allFontFamilies = getAllFontFamiliesToLoad();
 
   const allFontFamiliesPreloadLinks = allFontFamilies
     .map(
-      (
-        font
-      ) => `<link rel="preload" as="font" href="/fonts/${font}-Regular.ttf" type="font/ttf" crossorigin="anonymous">
+      (font) => `<link rel="preload" as="font" href="/fonts/${font}-Regular.ttf" type="font/ttf" crossorigin="anonymous">
 <link rel="preload" as="font" href="/fonts/${font}-Bold.ttf" type="font/ttf" crossorigin="anonymous">`
     )
     .join("");
 
   const allFontFamiliesFontFaces = allFontFamilies
     .map(
-      (
-        font
-      ) => `@font-face {font-family: "${font}"; src: url("/fonts/${font}-Regular.ttf");}
+      (font) => `@font-face {font-family: "${font}"; src: url("/fonts/${font}-Regular.ttf");}
 @font-face {font-family: "${font}"; src: url("/fonts/${font}-Bold.ttf"); font-weight: bold;}`
     )
     .join("");
@@ -50,20 +46,18 @@ const getIframeInitialContent = (isA4: boolean) => {
 </html>`;
 };
 
-/**
- * Iframe is used here for style isolation, since react pdf uses pt unit.
- * It creates a sandbox document body that uses letter/A4 pt size as width.
- */
 const ResumeIframe = ({
   documentSize,
   scale,
   children,
+  resume,
   enablePDFViewer = false,
   showHeatmap = false,
 }: {
   documentSize: string;
   scale: number;
   children: React.ReactNode;
+  resume: Resume;
   enablePDFViewer?: boolean;
   showHeatmap?: boolean;
 }) => {
@@ -91,9 +85,6 @@ const ResumeIframe = ({
       }}
       className="relative"
     >
-      {/* There is an outer div and an inner div here. The inner div sets the iframe width and uses transform scale to zoom in/out the resume iframe.
-        While zooming out or scaling down via transform, the element appears smaller but still occupies the same width/height. Therefore, we use the
-        outer div to restrict the max width & height proportionally */}
       <div
         style={{
           width: `${width}px`,
@@ -105,25 +96,20 @@ const ResumeIframe = ({
         <Frame
           style={{ width: "100%", height: "100%" }}
           initialContent={iframeInitialContent}
-          // key is used to force component to re-mount when document size changes
           key={isA4 ? "A4" : "LETTER"}
         >
           {children}
         </Frame>
-        {showHeatmap && <HeatmapOverlay width={width} height={height} />}
+        {showHeatmap && <HeatmapOverlay width={width} height={height} resume={resume} />}
       </div>
     </div>
   );
 };
 
-/**
- * Load iframe client side since iframe can't be SSR
- */
 export const ResumeIframeCSR = dynamic(() => Promise.resolve(ResumeIframe), {
   ssr: false,
 });
 
-// PDFViewer is only used for debugging. Its size is quite large, so we make it dynamic import
 const DynamicPDFViewer = dynamic(
   () => import("@react-pdf/renderer").then((module) => module.PDFViewer),
   {
