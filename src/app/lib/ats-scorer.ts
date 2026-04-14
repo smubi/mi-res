@@ -14,6 +14,8 @@ export interface ATSReport {
   overallScore: number;
   criteria: ATSCriterion[];
   jobTitle: string;
+  missingKeywords: string[];
+  readabilityScore: number;
 }
 
 const ACTION_VERBS = [
@@ -310,11 +312,25 @@ export function calculateATSScore(resume: Resume, jobDescription: string): ATSRe
     tip: "Ensure your work history dates are clear so ATS can accurately calculate your years of experience."
   });
 
+  // Calculate Readability (Simple Flesch-Kincaid approximation)
+  const sentences = resumeText.split(/[.!?]+/).length;
+  const words = resumeText.split(/\s+/).length;
+  const syllables = resumeText.replace(/[^aeiouy]/gi, "").length;
+  const readabilityScore = Math.round(206.835 - 1.015 * (words / sentences) - 84.6 * (syllables / words));
+
+  // Identify Missing Keywords (Top 10 important ones)
+  const stopWords = new Set(["and", "the", "for", "with", "from", "that", "this", "your", "will", "have", "been", "were", "they", "their"]);
+  const missingKeywords = Array.from(jdWords)
+    .filter(word => word.length > 3 && !resumeWords.has(word) && !stopWords.has(word))
+    .slice(0, 10);
+
   const overallScore = Math.round(criteria.reduce((acc, c) => acc + c.score, 0) / criteria.length);
 
   return {
     overallScore,
     criteria,
-    jobTitle: targetTitle || "Target Position"
+    jobTitle: targetTitle || "Target Position",
+    missingKeywords,
+    readabilityScore: Math.max(0, Math.min(100, readabilityScore))
   };
 }

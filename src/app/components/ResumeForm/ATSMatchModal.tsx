@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { XMarkIcon, CheckCircleIcon, ExclamationCircleIcon, XCircleIcon, ChevronRightIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
+import { XMarkIcon, CheckCircleIcon, ExclamationCircleIcon, XCircleIcon, ChevronRightIcon, ChevronDownIcon, LightBulbIcon, BookOpenIcon } from "@heroicons/react/24/outline";
 import { Resume } from "../../lib/redux/types";
 import { calculateATSScore, ATSCriterion } from "../../lib/ats-scorer";
 
@@ -87,10 +87,37 @@ export const ATSMatchModal: React.FC<ATSMatchModalProps> = ({
               <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">
                 {report.overallScore >= 80 ? "Excellent Match!" : report.overallScore >= 50 ? "Good Potential" : "Needs Optimization"}
               </h3>
-              <p className="text-slate-600 dark:text-slate-400 max-w-md">
+              <p className="text-slate-600 dark:text-slate-400 max-w-md mb-4">
                 Your resume has been analyzed against 20 key ATS criteria.
                 {report.overallScore < 80 ? " Follow the tips below to improve your score and increase your chances of getting noticed." : " Your resume is well-optimized for this role."}
               </p>
+              <div className="flex flex-wrap gap-4 justify-center md:justify-start">
+                <div className="flex items-center gap-2 bg-white/50 dark:bg-slate-800/50 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700">
+                  <BookOpenIcon className="w-4 h-4 text-blue-500" />
+                  <span className="text-xs font-bold text-slate-700 dark:text-slate-300">Readability: {report.readabilityScore}%</span>
+                </div>
+                <div className="flex items-center gap-2 bg-white/50 dark:bg-slate-800/50 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700">
+                  <LightBulbIcon className="w-4 h-4 text-yellow-500" />
+                  <span className="text-xs font-bold text-slate-700 dark:text-slate-300">{report.missingKeywords.length} Missing Keywords</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Missing Keywords Section */}
+        {report.missingKeywords.length > 0 && (
+          <div className="px-6 py-4 bg-amber-50/50 dark:bg-amber-900/10 border-b border-amber-100 dark:border-amber-900/20">
+            <h4 className="text-xs font-bold text-amber-800 dark:text-amber-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+              <LightBulbIcon className="w-4 h-4" />
+              Top Missing Keywords to Include
+            </h4>
+            <div className="flex flex-wrap gap-2">
+              {report.missingKeywords.map(keyword => (
+                <span key={keyword} className="px-2.5 py-1 bg-white dark:bg-slate-800 text-amber-700 dark:text-amber-300 text-xs font-semibold rounded-md border border-amber-200 dark:border-amber-800 shadow-sm">
+                  + {keyword}
+                </span>
+              ))}
             </div>
           </div>
         )}
