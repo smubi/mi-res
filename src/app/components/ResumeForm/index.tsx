@@ -37,6 +37,10 @@ import { HealthDashboard } from "./HealthDashboard";
 import { RecruiterInsights } from "./RecruiterInsights";
 import { ATSCompatibilityReport } from "./ATSCompatibilityReport";
 import { SkillMatchVisualizer } from "./SkillMatchVisualizer";
+import { SkillGapVenn } from "./SkillGapVenn";
+import { KeywordHeatmap } from "./KeywordHeatmap";
+import { JDWordCloud } from "./JDWordCloud";
+import { RoleBenchmarker } from "./RoleBenchmarker";
 import { LinkedInOptimizer } from "./LinkedInOptimizer";
 import { SalaryNegotiationCoach } from "./SalaryNegotiationCoach";
 import { ResumeProgressChart } from "./ResumeProgressChart";
@@ -132,6 +136,10 @@ export const ResumeForm = () => {
                       Check 20-Point ATS Match
                     </button>
                     <JobDescriptionForm />
+                    <SkillGapVenn />
+                    <KeywordHeatmap />
+                    <JDWordCloud />
+                    <RoleBenchmarker />
                     <SkillMatchVisualizer />
                     <JDAnalyzer />
                     <KeywordDensity />
