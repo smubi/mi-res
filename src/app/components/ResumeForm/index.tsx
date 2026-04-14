@@ -33,6 +33,7 @@ import { ToneStyleChecker } from "./ToneStyleChecker";
 import { NetworkingAssistant } from "./NetworkingAssistant";
 import { FlexboxSpacer } from "components/FlexboxSpacer";
 import { FormTabs, TabType } from "./FormTabs";
+import { Accordion, AccordionItem } from "./Form/Accordion";
 import { cx } from "lib/cx";
 
 const formTypeToComponent: { [type in ShowForm]: () => JSX.Element } = {
@@ -41,6 +42,14 @@ const formTypeToComponent: { [type in ShowForm]: () => JSX.Element } = {
   projects: ProjectsForm,
   skills: SkillsForm,
   custom: CustomForm,
+};
+
+const formTypeToTitle: { [type in ShowForm]: string } = {
+  workExperiences: "Work Experience",
+  educations: "Education",
+  projects: "Projects",
+  skills: "Skills",
+  custom: "Custom Section",
 };
 
 export const ResumeForm = () => {
@@ -54,12 +63,9 @@ export const ResumeForm = () => {
   return (
     <div
       className={cx(
-        "flex flex-col scrollbar-thin md:h-[calc(100vh-var(--top-nav-bar-height))] md:overflow-y-scroll transition-colors duration-300",
-        "bg-gray-50/50 dark:bg-gray-950",
-        "scrollbar-track-gray-100 dark:scrollbar-track-gray-900",
-        isHover 
-          ? "scrollbar-thumb-gray-200 dark:scrollbar-thumb-gray-800" 
-          : "scrollbar-thumb-gray-100 dark:scrollbar-thumb-gray-900"
+        "flex flex-col scrollbar-thin scrollbar-track-gray-100 md:h-[calc(100vh-var(--top-nav-bar-height))] md:overflow-y-scroll transition-colors",
+        isHover ? "scrollbar-thumb-gray-200" : "scrollbar-thumb-gray-100",
+        "dark:bg-gray-900 dark:scrollbar-track-gray-800 dark:scrollbar-thumb-gray-700"
       )}
       onMouseOver={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
@@ -67,47 +73,77 @@ export const ResumeForm = () => {
       <FormTabs activeTab={activeTab} onChange={setActiveTab} />
       
       <div className="flex justify-center md:justify-end">
-        <section className="flex w-full max-w-2xl flex-col gap-6 p-[var(--resume-padding)]">
+        <section className="flex w-full max-w-2xl flex-col gap-8 p-[var(--resume-padding)]">
           {activeTab === "content" && (
-            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <ProfileForm />
+            <Accordion>
+              <AccordionItem title="Profile">
+                <ProfileForm />
+              </AccordionItem>
               {formsOrder.map((form) => {
                 const Component = formTypeToComponent[form];
-                return <Component key={form} />;
+                return (
+                  <AccordionItem key={form} title={formTypeToTitle[form]}>
+                    <Component />
+                  </AccordionItem>
+                );
               })}
-            </div>
+            </Accordion>
           )}
 
           {activeTab === "optimize" && (
-            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <LiveGrader />
-              <ScoreBreakdown />
-              <JobDescriptionForm />
-              <NetworkingAssistant />
-              <JDAnalyzer />
-              <KeywordDensity />
-              <ResumeAnalysis />
-              <ToneStyleChecker />
-              <QuantificationNudge />
-              <SkillSuggestions />
-              <VerbLibrary />
-              <InterviewPrep />
-              <ResumeChecklist />
-              <CoverLetterGenerator />
-              <SmartSuggestions />
-            </div>
+            <Accordion>
+              <AccordionItem title="Resume Analysis">
+                <div className="flex flex-col gap-6">
+                  <LiveGrader />
+                  <ScoreBreakdown />
+                  <ToneStyleChecker />
+                  <ResumeChecklist />
+                </div>
+              </AccordionItem>
+              <AccordionItem title="Job Matching">
+                <div className="flex flex-col gap-6">
+                  <JobDescriptionForm />
+                  <JDAnalyzer />
+                  <KeywordDensity />
+                  <ResumeAnalysis />
+                </div>
+              </AccordionItem>
+              <AccordionItem title="Content Improvement">
+                <div className="flex flex-col gap-6">
+                  <QuantificationNudge />
+                  <SkillSuggestions />
+                  <VerbLibrary />
+                  <SmartSuggestions />
+                </div>
+              </AccordionItem>
+            </Accordion>
           )}
 
           {activeTab === "design" && (
-            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="flex flex-col gap-8">
               <ThemeForm />
-              <ResumeSnapshots />
-              <ResumeComparison />
+              <div className="border-t border-gray-100 pt-8 dark:border-gray-800">
+                <h3 className="mb-6 text-sm font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500">
+                  Version Control
+                </h3>
+                <div className="flex flex-col gap-6">
+                  <ResumeSnapshots />
+                  <ResumeComparison />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "track" && (
+            <div className="flex flex-col gap-8">
               <JobTracker />
+              <NetworkingAssistant />
+              <InterviewPrep />
+              <CoverLetterGenerator />
             </div>
           )}
           
-          <div className="h-20" />
+          <br />
         </section>
         <FlexboxSpacer maxWidth={50} className="hidden md:block" />
       </div>
