@@ -10,6 +10,7 @@ import { FlexboxSpacer } from "components/FlexboxSpacer";
 import { useAppSelector } from "lib/redux/hooks";
 import { selectResume } from "lib/redux/resumeSlice";
 import { selectSettings } from "lib/redux/settingsSlice";
+import { selectJobTitle } from "lib/redux/aiSlice";
 import { DEBUG_RESUME_PDF_FLAG } from "lib/constants";
 import {
   useRegisterReactPDFFont,
@@ -25,11 +26,17 @@ export const Resume = () => {
   const [viewMode, setViewMode] = useState<"pdf" | "ats">("pdf");
   const resume = useAppSelector(selectResume);
   const settings = useAppSelector(selectSettings);
+  const jobTitle = useAppSelector(selectJobTitle);
   
   const document = useMemo(
     () => <ResumePDF resume={resume} settings={settings} isPDF={true} />,
     [resume, settings]
   );
+
+  const fileName = useMemo(() => {
+    const name = resume.profile.name || "Resume";
+    return jobTitle ? `${name} - ${jobTitle}` : `${name} - Resume`;
+  }, [resume.profile.name, jobTitle]);
 
   useRegisterReactPDFFont();
   useRegisterReactPDFHyphenationCallback(settings.fontFamily);
@@ -85,7 +92,7 @@ export const Resume = () => {
               setScale={setScale}
               documentSize={settings.documentSize}
               document={document}
-              fileName={resume.profile.name + " - Resume"}
+              fileName={fileName}
             />
           )}
         </div>

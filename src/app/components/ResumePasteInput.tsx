@@ -50,7 +50,7 @@ export const ResumePasteInput = () => {
       saveStateToLocalStorage({
         resume,
         settings,
-        ai: { jobDescription: "", isAnalyzing: false, coverLetter: "" },
+        ai: { jobTitle: "", jobDescription: "", isAnalyzing: false, coverLetter: "" },
         snapshots: { snapshots: [] },
       });
       router.push("/resume-builder");
