@@ -32,6 +32,7 @@ import { KeywordDensity } from "./KeywordDensity";
 import { ToneStyleChecker } from "./ToneStyleChecker";
 import { NetworkingAssistant } from "./NetworkingAssistant";
 import { HealthDashboard } from "./HealthDashboard";
+import { RecruiterInsights } from "./RecruiterInsights";
 import { FlexboxSpacer } from "components/FlexboxSpacer";
 import { FormTabs, TabType } from "./FormTabs";
 import { Accordion, AccordionItem } from "./Form/Accordion";
@@ -98,6 +99,7 @@ export const ResumeForm = () => {
               <Accordion>
                 <AccordionItem title="Resume Analysis">
                   <div className="flex flex-col gap-6">
+                    <RecruiterInsights />
                     <LiveGrader />
                     <ScoreBreakdown />
                     <ToneStyleChecker />

@@ -1,5 +1,5 @@
 "use client";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { ResumeIframeCSR } from "components/Resume/ResumeIFrame";
 import { ResumePDF } from "components/Resume/ResumePDF";
 import {
@@ -19,13 +19,16 @@ import {
 import { NonEnglishFontsCSSLazyLoader } from "components/fonts/NonEnglishFontsCSSLoader";
 import { ATSScoreBadge } from "components/Resume/ATSScoreBadge";
 import { ATSView } from "components/Resume/ATSView";
-import { EyeIcon, CommandLineIcon, FireIcon } from "@heroicons/react/24/outline";
+import { EyeIcon, CommandLineIcon, FireIcon, ClockIcon } from "@heroicons/react/24/outline";
 import { cx } from "lib/cx";
 
 export const Resume = () => {
   const [scale, setScale] = useState(0.8);
   const [viewMode, setViewMode] = useState<"pdf" | "ats">("pdf");
   const [showHeatmap, setShowHeatmap] = useState(false);
+  const [isSimulating, setIsSimulating] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(6);
+  
   const resume = useAppSelector(selectResume);
   const settings = useAppSelector(selectSettings);
   const jobTitle = useAppSelector(selectJobTitle);
@@ -42,6 +45,22 @@ export const Resume = () => {
 
   useRegisterReactPDFFont();
   useRegisterReactPDFHyphenationCallback(settings.fontFamily);
+
+  const startSimulation = () => {
+    setIsSimulating(true);
+    setShowHeatmap(true);
+    setTimeLeft(6);
+  };
+
+  useEffect(() => {
+    if (isSimulating && timeLeft > 0) {
+      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
+      return () => clearTimeout(timer);
+    } else if (timeLeft === 0) {
+      setIsSimulating(false);
+      setShowHeatmap(false);
+    }
+  }, [isSimulating, timeLeft]);
 
   return (
     <>
@@ -86,13 +105,31 @@ export const Resume = () => {
             >
               <FireIcon className="h-5 w-5" />
             </button>
+            <button
+              onClick={startSimulation}
+              disabled={isSimulating}
+              className={cx(
+                "flex h-10 w-10 items-center justify-center rounded-xl border shadow-sm transition-all",
+                isSimulating
+                  ? 'bg-purple-600 text-white border-purple-500 animate-pulse'
+                  : 'bg-white text-gray-400 border-gray-100 hover:text-purple-600 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-500 dark:hover:text-purple-400'
+              )}
+              title="Simulate 6-Second Scan"
+            >
+              <ClockIcon className="h-5 w-5" />
+            </button>
           </div>
 
           <ATSScoreBadge />
           
-          {showHeatmap && (
+          {(showHeatmap || isSimulating) && (
             <div className="absolute right-4 top-4 z-40 flex flex-col gap-2 rounded-lg border border-gray-200 bg-white/90 p-3 shadow-sm backdrop-blur-sm dark:border-gray-700 dark:bg-gray-800/90">
-              <div className="text-xs font-semibold text-gray-500 dark:text-gray-400">Recruiter Focus</div>
+              <div className="flex items-center justify-between gap-4">
+                <div className="text-xs font-semibold text-gray-500 dark:text-gray-400">
+                  {isSimulating ? `Scanning... ${timeLeft}s` : 'Recruiter Focus'}
+                </div>
+                {isSimulating && <div className="h-2 w-2 animate-ping rounded-full bg-purple-500" />}
+              </div>
               <div className="flex items-center gap-2">
                 <div className="h-3 w-24 rounded-full bg-gradient-to-r from-blue-500 via-green-500 via-yellow-500 to-red-500" />
               </div>
