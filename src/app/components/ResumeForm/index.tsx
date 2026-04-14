@@ -27,6 +27,7 @@ import { LiveGrader } from "./LiveGrader";
 import { JDAnalyzer } from "./JDAnalyzer";
 import { ScoreBreakdown } from "./ScoreBreakdown";
 import { KeywordDensity } from "./KeywordDensity";
+import { ToneStyleChecker } from "./ToneStyleChecker";
 import { FlexboxSpacer } from "components/FlexboxSpacer";
 import { FormTabs, TabType } from "./FormTabs";
 import { cx } from "lib/cx";
@@ -78,6 +79,7 @@ export const ResumeForm = () => {
               <JDAnalyzer />
               <KeywordDensity />
               <ResumeAnalysis />
+              <ToneStyleChecker />
               <QuantificationNudge />
               <SkillSuggestions />
               <VerbLibrary />
