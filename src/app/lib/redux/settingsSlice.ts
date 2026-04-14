@@ -6,6 +6,8 @@ export interface Settings {
   fontFamily: string;
   fontSize: string;
   documentSize: string;
+  margins: string; // in pt
+  lineHeight: string;
   formToShow: {
     workExperiences: boolean;
     educations: boolean;
@@ -46,6 +48,8 @@ export const initialSettings: Settings = {
   fontFamily: DEFAULT_FONT_FAMILY,
   fontSize: DEFAULT_FONT_SIZE,
   documentSize: "Letter",
+  margins: "40",
+  lineHeight: "1.3",
   formToShow: {
     workExperiences: true,
     educations: true,

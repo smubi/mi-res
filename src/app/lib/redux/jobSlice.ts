@@ -8,6 +8,7 @@ export interface Job {
   date: number;
   status: "Applied" | "Interviewing" | "Offer" | "Rejected" | "Wishlist";
   snapshotId?: string;
+  notes?: string;
 }
 
 interface JobState {
@@ -38,6 +39,15 @@ export const jobSlice = createSlice({
         job.status = action.payload.status;
       }
     },
+    updateJobNotes: (
+      draft,
+      action: PayloadAction<{ id: string; notes: string }>
+    ) => {
+      const job = draft.jobs.find((j) => j.id === action.payload.id);
+      if (job) {
+        job.notes = action.payload.notes;
+      }
+    },
     deleteJob: (draft, action: PayloadAction<string>) => {
       draft.jobs = draft.jobs.filter((j) => j.id !== action.payload);
     },
@@ -47,7 +57,7 @@ export const jobSlice = createSlice({
   },
 });
 
-export const { addJob, updateJobStatus, deleteJob, setJobs } = jobSlice.actions;
+export const { addJob, updateJobStatus, updateJobNotes, deleteJob, setJobs } = jobSlice.actions;
 
 export const selectJobs = (state: RootState) => state.jobs.jobs;
 

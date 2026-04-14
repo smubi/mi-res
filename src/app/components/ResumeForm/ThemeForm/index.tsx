@@ -15,11 +15,11 @@ import {
 } from "lib/redux/settingsSlice";
 import { useAppDispatch, useAppSelector } from "lib/redux/hooks";
 import type { FontFamily } from "components/fonts/constants";
-import { Cog6ToothIcon, TrashIcon, ExclamationTriangleIcon } from "@heroicons/react/24/outline";
+import { Cog6ToothIcon, TrashIcon, ExclamationTriangleIcon, ArrowsUpDownIcon, ArrowsPointingOutIcon } from "@heroicons/react/24/outline";
 
 export const ThemeForm = () => {
   const settings = useAppSelector(selectSettings);
-  const { fontSize, fontFamily, documentSize } = settings;
+  const { fontSize, fontFamily, documentSize, margins = "40", lineHeight = "1.3" } = settings;
   const themeColor = settings.themeColor || DEFAULT_THEME_COLOR;
   const dispatch = useAppDispatch();
 
@@ -44,6 +44,7 @@ export const ThemeForm = () => {
               Resume Setting
             </h1>
           </div>
+          
           <div>
             <InlineInput
               label="Theme Color"
@@ -71,6 +72,7 @@ export const ThemeForm = () => {
               ))}
             </div>
           </div>
+
           <div>
             <InputGroupWrapper label="Font Family" />
             <FontFamilySelectionsCSR
@@ -79,28 +81,73 @@ export const ThemeForm = () => {
               handleSettingsChange={handleSettingsChange}
             />
           </div>
-          <div>
-            <InlineInput
-              label="Font Size (pt)"
-              name="fontSize"
-              value={fontSize}
-              placeholder="11"
-              onChange={handleSettingsChange}
-            />
-            <FontSizeSelections
-              fontFamily={fontFamily as FontFamily}
-              themeColor={themeColor}
-              selectedFontSize={fontSize}
-              handleSettingsChange={handleSettingsChange}
-            />
+
+          <div className="grid grid-cols-2 gap-6">
+            <div>
+              <InlineInput
+                label="Font Size (pt)"
+                name="fontSize"
+                value={fontSize}
+                placeholder="11"
+                onChange={handleSettingsChange}
+              />
+              <FontSizeSelections
+                fontFamily={fontFamily as FontFamily}
+                themeColor={themeColor}
+                selectedFontSize={fontSize}
+                handleSettingsChange={handleSettingsChange}
+              />
+            </div>
+            <div>
+              <InputGroupWrapper label="Document Size" />
+              <DocumentSizeSelections
+                themeColor={themeColor}
+                selectedDocumentSize={documentSize}
+                handleSettingsChange={handleSettingsChange}
+              />
+            </div>
           </div>
-          <div>
-            <InputGroupWrapper label="Document Size" />
-            <DocumentSizeSelections
-              themeColor={themeColor}
-              selectedDocumentSize={documentSize}
-              handleSettingsChange={handleSettingsChange}
-            />
+
+          <div className="space-y-4 border-t border-gray-100 pt-6">
+            <h3 className="text-sm font-bold uppercase tracking-widest text-gray-400">Advanced Layout</h3>
+            
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                  <ArrowsPointingOutIcon className="h-4 w-4 text-gray-400" />
+                  Side Margins
+                </label>
+                <span className="text-xs font-bold text-sky-600">{margins}pt</span>
+              </div>
+              <input
+                type="range"
+                min="20"
+                max="80"
+                step="1"
+                value={margins}
+                onChange={(e) => handleSettingsChange("margins", e.target.value)}
+                className="w-full accent-sky-500"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                  <ArrowsUpDownIcon className="h-4 w-4 text-gray-400" />
+                  Line Spacing
+                </label>
+                <span className="text-xs font-bold text-sky-600">{lineHeight}</span>
+              </div>
+              <input
+                type="range"
+                min="1.0"
+                max="2.0"
+                step="0.1"
+                value={lineHeight}
+                onChange={(e) => handleSettingsChange("lineHeight", e.target.value)}
+                className="w-full accent-sky-500"
+              />
+            </div>
           </div>
         </div>
       </BaseForm>
