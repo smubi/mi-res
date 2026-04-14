@@ -6,6 +6,8 @@ import {
   useSetInitialStore,
 } from "lib/redux/hooks";
 import { ShowForm, selectFormsOrder } from "lib/redux/settingsSlice";
+import { selectResume } from "lib/redux/resumeSlice";
+import { selectJobDescription } from "lib/redux/aiSlice";
 import { ProfileForm } from "./ProfileForm";
 import { WorkExperiencesForm } from "./WorkExperiencesForm";
 import { EducationsForm } from "./EducationsForm";
@@ -39,10 +41,12 @@ import { LinkedInOptimizer } from "./LinkedInOptimizer";
 import { SalaryNegotiationCoach } from "./SalaryNegotiationCoach";
 import { ResumeProgressChart } from "./ResumeProgressChart";
 import { EmploymentGapFramer } from "./EmploymentGapFramer";
+import { ATSMatchModal } from "./ATSMatchModal";
 import { FlexboxSpacer } from "components/FlexboxSpacer";
 import { FormTabs, TabType } from "./FormTabs";
 import { Accordion, AccordionItem } from "./Form/Accordion";
 import { cx } from "lib/cx";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 
 const formTypeToComponent: { [type in ShowForm]: () => JSX.Element } = {
   workExperiences: WorkExperiencesForm,
@@ -65,8 +69,11 @@ export const ResumeForm = () => {
   useSaveStateToLocalStorageOnChange();
 
   const formsOrder = useAppSelector(selectFormsOrder);
+  const resume = useAppSelector(selectResume);
+  const jobDescription = useAppSelector(selectJobDescription);
   const [isHover, setIsHover] = useState(false);
   const [activeTab, setActiveTab] = useState<TabType>("content");
+  const [isATSMatchModalOpen, setIsATSMatchModalOpen] = useState(false);
 
   return (
     <div
@@ -114,6 +121,13 @@ export const ResumeForm = () => {
                 </AccordionItem>
                 <AccordionItem title="Job Matching">
                   <div className="flex flex-col gap-6">
+                    <button
+                      onClick={() => setIsATSMatchModalOpen(true)}
+                      className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 py-4 text-lg font-bold text-white shadow-lg shadow-blue-200 transition-all hover:bg-blue-700 hover:shadow-blue-300 active:scale-[0.98] dark:shadow-none"
+                    >
+                      <MagnifyingGlassIcon className="h-6 w-6" />
+                      Check 20-Point ATS Match
+                    </button>
                     <JobDescriptionForm />
                     <SkillMatchVisualizer />
                     <JDAnalyzer />
@@ -166,6 +180,13 @@ export const ResumeForm = () => {
         </section>
         <FlexboxSpacer maxWidth={50} className="hidden md:block" />
       </div>
+
+      <ATSMatchModal
+        isOpen={isATSMatchModalOpen}
+        onClose={() => setIsATSMatchModalOpen(false)}
+        resume={resume}
+        jobDescription={jobDescription}
+      />
     </div>
   );
 };
