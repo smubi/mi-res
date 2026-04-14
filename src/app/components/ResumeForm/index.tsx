@@ -30,6 +30,7 @@ import { JDAnalyzer } from "./JDAnalyzer";
 import { ScoreBreakdown } from "./ScoreBreakdown";
 import { KeywordDensity } from "./KeywordDensity";
 import { ToneStyleChecker } from "./ToneStyleChecker";
+import { NetworkingAssistant } from "./NetworkingAssistant";
 import { FlexboxSpacer } from "components/FlexboxSpacer";
 import { FormTabs, TabType } from "./FormTabs";
 import { cx } from "lib/cx";
@@ -86,6 +87,7 @@ export const ResumeForm = () => {
               <SkillSuggestions />
               <VerbLibrary />
               <InterviewPrep />
+              <NetworkingAssistant />
               <ResumeChecklist />
               <CoverLetterGenerator />
               <SmartSuggestions />
