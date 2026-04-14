@@ -312,6 +312,24 @@ export function calculateATSScore(resume: Resume, jobDescription: string): ATSRe
     tip: "Ensure your work history dates are clear so ATS can accurately calculate your years of experience."
   });
 
+  // 21. STAR Method Compliance
+  const allBulletPoints = resume.workExperiences.flatMap(exp => exp.descriptions);
+  const starCompliant = allBulletPoints.filter(bullet => {
+    const hasAction = ACTION_VERBS.some(verb => bullet.toLowerCase().includes(verb));
+    const hasResult = /\d+|%|\$|increased|decreased|improved|saved|reduced|grew/.test(bullet.toLowerCase());
+    return hasAction && hasResult;
+  });
+  const starScore = allBulletPoints.length > 0 ? Math.round((starCompliant.length / allBulletPoints.length) * 100) : 0;
+  criteria.push({
+    id: "star-method",
+    name: "STAR Method Compliance",
+    category: "Content",
+    score: starScore,
+    status: starScore > 70 ? "pass" : starScore > 40 ? "warning" : "fail",
+    message: `${starCompliant.length} out of ${allBulletPoints.length} bullet points follow the STAR method (Action + Result).`,
+    tip: "Ensure every bullet point starts with an action verb and ends with a quantifiable result or impact."
+  });
+
   // Calculate Readability (Simple Flesch-Kincaid approximation)
   const sentences = resumeText.split(/[.!?]+/).length;
   const words = resumeText.split(/\s+/).length;

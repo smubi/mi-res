@@ -41,6 +41,7 @@ import { LinkedInOptimizer } from "./LinkedInOptimizer";
 import { SalaryNegotiationCoach } from "./SalaryNegotiationCoach";
 import { ResumeProgressChart } from "./ResumeProgressChart";
 import { EmploymentGapFramer } from "./EmploymentGapFramer";
+import { STARMethodAnalyzer } from "./STARMethodAnalyzer";
 import { ATSMatchModal } from "./ATSMatchModal";
 import { FlexboxSpacer } from "components/FlexboxSpacer";
 import { FormTabs, TabType } from "./FormTabs";
@@ -137,6 +138,7 @@ export const ResumeForm = () => {
                 </AccordionItem>
                 <AccordionItem title="Technical & Content">
                   <div className="flex flex-col gap-6">
+                    <STARMethodAnalyzer />
                     <ATSCompatibilityReport />
                     <LinkedInOptimizer />
                     <EmploymentGapFramer />
