@@ -24,6 +24,7 @@ import { InterviewPrep } from "./InterviewPrep";
 import { VerbLibrary } from "./VerbLibrary";
 import { QuantificationNudge } from "./QuantificationNudge";
 import { LiveGrader } from "./LiveGrader";
+import { JDAnalyzer } from "./JDAnalyzer";
 import { FlexboxSpacer } from "components/FlexboxSpacer";
 import { FormTabs, TabType } from "./FormTabs";
 import { cx } from "lib/cx";
@@ -71,6 +72,7 @@ export const ResumeForm = () => {
             <>
               <LiveGrader />
               <JobDescriptionForm />
+              <JDAnalyzer />
               <ResumeAnalysis />
               <QuantificationNudge />
               <SkillSuggestions />
