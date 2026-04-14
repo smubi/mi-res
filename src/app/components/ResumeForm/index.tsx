@@ -35,6 +35,10 @@ import { HealthDashboard } from "./HealthDashboard";
 import { RecruiterInsights } from "./RecruiterInsights";
 import { ATSCompatibilityReport } from "./ATSCompatibilityReport";
 import { SkillMatchVisualizer } from "./SkillMatchVisualizer";
+import { LinkedInOptimizer } from "./LinkedInOptimizer";
+import { SalaryNegotiationCoach } from "./SalaryNegotiationCoach";
+import { ResumeProgressChart } from "./ResumeProgressChart";
+import { EmploymentGapFramer } from "./EmploymentGapFramer";
 import { FlexboxSpacer } from "components/FlexboxSpacer";
 import { FormTabs, TabType } from "./FormTabs";
 import { Accordion, AccordionItem } from "./Form/Accordion";
@@ -120,6 +124,8 @@ export const ResumeForm = () => {
                 <AccordionItem title="Technical & Content">
                   <div className="flex flex-col gap-6">
                     <ATSCompatibilityReport />
+                    <LinkedInOptimizer />
+                    <EmploymentGapFramer />
                     <QuantificationNudge />
                     <SkillSuggestions />
                     <VerbLibrary />
@@ -138,6 +144,7 @@ export const ResumeForm = () => {
                   Version Control
                 </h3>
                 <div className="flex flex-col gap-6">
+                  <ResumeProgressChart />
                   <ResumeSnapshots />
                   <ResumeComparison />
                 </div>
@@ -148,6 +155,7 @@ export const ResumeForm = () => {
           {activeTab === "track" && (
             <div className="flex flex-col gap-8">
               <JobTracker />
+              <SalaryNegotiationCoach />
               <NetworkingAssistant />
               <InterviewPrep />
               <CoverLetterGenerator />
