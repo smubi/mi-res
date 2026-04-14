@@ -1,10 +1,9 @@
 "use client";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
-import logoSrc from "public/logo.svg";
+import { Logo } from "components/Logo";
 import { cx } from "lib/cx";
-import { SunIcon, MoonIcon, ComputerDesktopIcon } from "@heroicons/react/24/outline";
+import { SunIcon, MoonIcon } from "@heroicons/react/24/outline";
 import { useAppDispatch, useAppSelector } from "lib/redux/hooks";
 import { changeSettings, selectSettings } from "lib/redux/settingsSlice";
 
@@ -23,32 +22,28 @@ export const TopNavBar = () => {
     <header
       aria-label="Site Header"
       className={cx(
-        "flex h-[var(--top-nav-bar-height)] items-center border-b-2 border-gray-100 px-3 lg:px-12 transition-colors",
-        isHomePage && "bg-dot",
-        "dark:border-gray-800 dark:bg-gray-900"
+        "sticky top-0 z-50 flex h-[var(--top-nav-bar-height)] items-center border-b border-slate-200 bg-white/80 px-4 backdrop-blur-md lg:px-12 transition-colors",
+        "dark:border-slate-800 dark:bg-slate-900/80"
       )}
     >
       <div className="flex h-10 w-full items-center justify-between">
         <Link href="/">
-          <span className="sr-only">OpenResume</span>
-          <Image
-            src={logoSrc}
-            alt="OpenResume Logo"
-            className="h-8 w-full dark:invert"
-            priority
-          />
+          <Logo />
         </Link>
         <nav
           aria-label="Site Nav Bar"
-          className="flex items-center gap-2 text-sm font-medium"
+          className="flex items-center gap-4 text-sm font-semibold"
         >
           {[
-            ["/resume-builder", "Builder"],
-            ["/resume-parser", "Parser"],
+            ["/resume-builder", "Resume Builder"],
+            ["/resume-parser", "ATS Checker"],
           ].map(([href, text]) => (
             <Link
               key={text}
-              className="rounded-md px-1.5 py-2 text-gray-500 hover:bg-gray-100 focus-visible:bg-gray-100 lg:px-4 dark:text-gray-400 dark:hover:bg-gray-800"
+              className={cx(
+                "rounded-full px-4 py-2 transition-all hover:bg-slate-100 dark:hover:bg-slate-800",
+                pathName === href ? "bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400" : "text-slate-600 dark:text-slate-400"
+              )}
               href={href}
             >
               {text}
@@ -57,7 +52,7 @@ export const TopNavBar = () => {
           
           <button
             onClick={toggleTheme}
-            className="ml-2 rounded-md p-2 text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
+            className="ml-2 rounded-full p-2 text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 transition-colors"
             aria-label="Toggle theme"
           >
             {theme === "light" ? (
@@ -66,16 +61,6 @@ export const TopNavBar = () => {
               <SunIcon className="h-5 w-5" />
             )}
           </button>
-
-          <div className="ml-1 mt-1 hidden lg:block">
-            <iframe
-              src="https://ghbtns.com/github-btn.html?user=xitanggg&repo=open-resume&type=star&count=true"
-              width="100"
-              height="20"
-              className="overflow-hidden border-none dark:invert"
-              title="GitHub"
-            />
-          </div>
         </nav>
       </div>
     </header>

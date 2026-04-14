@@ -47,7 +47,7 @@ import { FlexboxSpacer } from "components/FlexboxSpacer";
 import { FormTabs, TabType } from "./FormTabs";
 import { Accordion, AccordionItem } from "./Form/Accordion";
 import { cx } from "lib/cx";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { Search } from "lucide-react";
 
 const formTypeToComponent: { [type in ShowForm]: () => JSX.Element } = {
   workExperiences: WorkExperiencesForm,
@@ -124,9 +124,9 @@ export const ResumeForm = () => {
                   <div className="flex flex-col gap-6">
                     <button
                       onClick={() => setIsATSMatchModalOpen(true)}
-                      className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 py-4 text-lg font-bold text-white shadow-lg shadow-blue-200 transition-all hover:bg-blue-700 hover:shadow-blue-300 active:scale-[0.98] dark:shadow-none"
+                      className="flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 py-4 text-lg font-bold text-white shadow-lg shadow-indigo-200 transition-all hover:bg-indigo-700 hover:shadow-indigo-300 active:scale-[0.98] dark:shadow-none"
                     >
-                      <MagnifyingGlassIcon className="h-6 w-6" />
+                      <Search className="h-6 w-6" />
                       Check 20-Point ATS Match
                     </button>
                     <JobDescriptionForm />

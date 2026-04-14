@@ -1,136 +1,68 @@
 "use client";
-import heartSrc from "public/assets/heart.svg";
+import React from "react";
+import Image from "next/image";
+import { Quote } from "lucide-react";
 import testimonialSpiegelSrc from "public/assets/testimonial-spiegel.jpg";
 import testimonialSantiSrc from "public/assets/testimonial-santi.jpg";
 import testimonialVivianSrc from "public/assets/testimonial-vivian.jpg";
-import React, { useEffect, useRef, useState } from "react";
-import Image from "next/image";
-import { useTailwindBreakpoints } from "lib/hooks/useTailwindBreakpoints";
 
 const TESTIMONIALS = [
   {
     src: testimonialSpiegelSrc,
     quote:
-      "Students often make silly mistakes on their resume by using inconsistent bullet points or font sizes. OpenResume’s auto format feature is a great help to ensure consistent format.",
+      "CareerCraft's auto-formatting is a game changer. It ensures my students' resumes are perfectly consistent and professional every time.",
     name: "Ms. Spiegel",
-    title: "Educator",
+    title: "Career Educator",
   },
   {
     src: testimonialSantiSrc,
     quote:
-      "I used OpenResume during my last job search and was invited to interview at top tech companies such as Google and Amazon thanks to its slick yet professional resume design.",
+      "I landed interviews at Google and Amazon using CareerCraft. The AI suggestions helped me highlight my impact in a way I couldn't do alone.",
     name: "Santi",
     title: "Software Engineer",
   },
   {
     src: testimonialVivianSrc,
     quote:
-      "Creating a professional resume on OpenResume is so smooth and easy! It saves me so much time and headache to not deal with google doc template.",
+      "The easiest resume builder I've ever used. No more fighting with margins or fonts. It's fast, intuitive, and the results are stunning.",
     name: "Vivian",
-    title: "College Student",
+    title: "Product Designer",
   },
 ];
 
-const LG_TESTIMONIALS_CLASSNAMES = [
-  "z-10",
-  "translate-x-44 translate-y-24 opacity-40",
-  "translate-x-32 -translate-y-28 opacity-40",
-];
-const SM_TESTIMONIALS_CLASSNAMES = ["z-10", "opacity-0", "opacity-0"];
-const ROTATION_INTERVAL_MS = 8 * 1000; // 8s
-
-export const Testimonials = ({ children }: { children?: React.ReactNode }) => {
-  const [testimonialsClassNames, setTestimonialsClassNames] = useState(
-    LG_TESTIMONIALS_CLASSNAMES
-  );
-  const isHoveredOnTestimonial = useRef(false);
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      if (!isHoveredOnTestimonial.current) {
-        setTestimonialsClassNames((preClassNames) => {
-          return [preClassNames[1], preClassNames[2], preClassNames[0]];
-        });
-      }
-    }, ROTATION_INTERVAL_MS);
-    return () => clearInterval(intervalId);
-  }, []);
-
-  const { isLg } = useTailwindBreakpoints();
-  useEffect(() => {
-    setTestimonialsClassNames(
-      isLg ? LG_TESTIMONIALS_CLASSNAMES : SM_TESTIMONIALS_CLASSNAMES
-    );
-  }, [isLg]);
-
+export const Testimonials = () => {
   return (
-    <section className="mx-auto -mt-2 px-8 pb-24">
-      <h2 className="mb-8 text-center text-3xl font-bold">
-        People{" "}
-        <Image src={heartSrc} alt="love" className="-mt-1 inline-block w-7" />{" "}
-        OpenResume
-      </h2>
-      <div className="mx-auto mt-10 h-[235px] max-w-lg lg:h-[400px] lg:pt-28">
-        <div className="relative lg:ml-[-50px]">
-          {TESTIMONIALS.map(({ src, quote, name, title }, idx) => {
-            const className = testimonialsClassNames[idx];
-            return (
-              <div
-                key={idx}
-                className={`bg-primary absolute max-w-lg rounded-[1.7rem] bg-opacity-30 shadow-md transition-all duration-1000 ease-linear ${className}`}
-                onMouseEnter={() => {
-                  if (className === "z-10") {
-                    isHoveredOnTestimonial.current = true;
-                  }
-                }}
-                onMouseLeave={() => {
-                  if (className === "z-10") {
-                    isHoveredOnTestimonial.current = false;
-                  }
-                }}
-              >
-                <figure className="m-1 flex gap-5 rounded-3xl bg-white p-5 text-gray-900 lg:p-7">
-                  <Image
-                    className="hidden h-24 w-24 select-none rounded-full lg:block"
-                    src={src}
-                    alt="profile"
-                  />
-                  <div>
-                    <blockquote>
-                      <p className="before:content-['“'] after:content-['”']">
-                        {quote}
-                      </p>
-                    </blockquote>
-                    <figcaption className="mt-3">
-                      <div className="hidden gap-2 lg:flex">
-                        <div className="font-semibold">{name}</div>
-                        <div
-                          className="select-none text-gray-700"
-                          aria-hidden="true"
-                        >
-                          •
-                        </div>
-                        <div className="text-gray-600">{title}</div>
-                      </div>
-                      <div className="flex gap-4 lg:hidden">
-                        <Image
-                          className=" block h-12 w-12 select-none rounded-full"
-                          src={src}
-                          alt="profile"
-                        />
-                        <div>
-                          <div className="font-semibold">{name}</div>
-                          <div className="text-gray-600">{title}</div>
-                        </div>
-                      </div>
-                    </figcaption>
-                  </div>
-                </figure>
+    <section className="py-24 bg-white dark:bg-slate-900">
+      <div className="container mx-auto px-4">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 dark:text-white mb-4">Loved by job seekers</h2>
+          <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+            Join thousands of professionals who have accelerated their careers with CareerCraft.
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-8">
+          {TESTIMONIALS.map(({ src, quote, name, title }, idx) => (
+            <div key={idx} className="bg-slate-50 dark:bg-slate-800/50 p-8 rounded-3xl border border-slate-100 dark:border-slate-700 relative">
+              <Quote className="absolute top-6 right-8 h-8 w-8 text-indigo-100 dark:text-slate-700" />
+              <p className="text-slate-700 dark:text-slate-300 mb-8 leading-relaxed italic">
+                "{quote}"
+              </p>
+              <div className="flex items-center gap-4 mt-auto">
+                <Image
+                  className="h-12 w-12 rounded-full object-cover ring-2 ring-white dark:ring-slate-700"
+                  src={src}
+                  alt={name}
+                />
+                <div>
+                  <div className="font-bold text-slate-900 dark:text-white">{name}</div>
+                  <div className="text-sm text-slate-500 dark:text-slate-500">{title}</div>
+                </div>
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
       </div>
-      {children}
     </section>
   );
 };

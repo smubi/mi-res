@@ -16,17 +16,17 @@ import { initialSettings } from "lib/redux/settingsSlice";
 import { initialAIState } from "lib/redux/aiSlice";
 import { initialSnapshotState } from "lib/redux/snapshotSlice";
 import { initialJobState } from "lib/redux/jobSlice";
-import { 
-  UserIcon, 
-  AcademicCapIcon, 
-  BriefcaseIcon, 
-  WrenchIcon,
-  DocumentTextIcon,
-  ArrowUpTrayIcon,
-  SparklesIcon,
-  CommandLineIcon,
-  EyeIcon
-} from "@heroicons/react/24/outline";
+import {
+  User,
+  GraduationCap,
+  Briefcase,
+  Wrench,
+  FileText,
+  Upload,
+  Sparkles,
+  Terminal,
+  Eye
+} from "lucide-react";
 
 export default function ResumeParser() {
   const router = useRouter();
@@ -66,73 +66,73 @@ export default function ResumeParser() {
   };
 
   return (
-    <main className="min-h-screen bg-gray-50/50 pb-20">
+    <main className="min-h-screen bg-slate-50/50 pb-20 dark:bg-slate-950">
       <DropzoneOverlay onDrop={handleFileDrop} />
       
-      <div className="bg-white border-b border-gray-100 py-12">
+      <div className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 py-16">
         <div className="mx-auto max-w-5xl px-6 text-center">
-          <h1 className="text-4xl font-black tracking-tight text-gray-900 sm:text-5xl">
-            Resume <span className="text-sky-500">Parser</span>
+          <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white sm:text-5xl">
+            ATS <span className="text-indigo-600">Checker</span>
           </h1>
-          <p className="mt-4 text-lg text-gray-500">
-            Drop a PDF anywhere to see how ATS systems read your data.
+          <p className="mt-4 text-lg text-slate-600 dark:text-slate-400">
+            See exactly how Applicant Tracking Systems parse your resume.
           </p>
           
-          <div className="mt-8 flex justify-center gap-4">
-            <label className="flex cursor-pointer items-center gap-2 rounded-full bg-gray-900 px-6 py-3 text-sm font-bold text-white shadow-lg transition-all hover:bg-gray-800 active:scale-95">
-              <ArrowUpTrayIcon className="h-4 w-4" />
-              Upload PDF
-              <input 
-                type="file" 
-                className="hidden" 
-                accept=".pdf" 
-                onChange={(e) => e.target.files?.[0] && handleFileDrop(e.target.files[0])} 
+          <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
+            <label className="flex cursor-pointer items-center justify-center gap-2 rounded-full bg-slate-900 dark:bg-white dark:text-slate-900 px-8 py-4 text-sm font-bold text-white shadow-xl transition-all hover:opacity-90 active:scale-95">
+              <Upload size={18} />
+              Upload Resume PDF
+              <input
+                type="file"
+                className="hidden"
+                accept=".pdf"
+                onChange={(e) => e.target.files?.[0] && handleFileDrop(e.target.files[0])}
               />
             </label>
-            <button 
+            <button
               onClick={handleTailorResume}
-              className="flex items-center gap-2 rounded-full bg-purple-600 px-6 py-3 text-sm font-bold text-white shadow-lg transition-all hover:bg-purple-700 active:scale-95"
+              className="flex items-center justify-center gap-2 rounded-full bg-indigo-600 px-8 py-4 text-sm font-bold text-white shadow-xl transition-all hover:bg-indigo-700 active:scale-95"
             >
-              <SparklesIcon className="h-4 w-4" />
-              Tailor this Resume
+              <Sparkles size={18} />
+              Optimize this Resume
             </button>
           </div>
         </div>
       </div>
 
       <div className="mx-auto mt-12 max-w-7xl px-6">
-        <div className="grid gap-8 lg:grid-cols-12">
+        <div className="grid gap-12 lg:grid-cols-12">
           
           <div className="lg:col-span-5">
-            <div className="sticky top-8 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl">
-              <div className="flex items-center justify-between border-b border-gray-100 bg-gray-50/50 px-4 py-3">
-                <div className="flex rounded-lg bg-gray-200 p-1">
-                  <button 
+            <div className="sticky top-24 overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xl">
+              <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 px-4 py-3">
+                <div className="flex rounded-lg bg-slate-200 dark:bg-slate-800 p-1">
+                  <button
                     onClick={() => setViewMode("preview")}
-                    className={`flex items-center gap-1.5 rounded-md px-3 py-1 text-[10px] font-bold uppercase transition-all ${viewMode === 'preview' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                    className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-[10px] font-bold uppercase transition-all ${viewMode === 'preview' ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm' : 'text-slate-500 hover:text-slate-700 dark:text-slate-400'}`}
                   >
-                    <EyeIcon className="h-3 w-3" />
+                    <Eye size={14} />
                     Preview
                   </button>
-                  <button 
+                  <button
                     onClick={() => setViewMode("text")}
-                    className={`flex items-center gap-1.5 rounded-md px-3 py-1 text-[10px] font-bold uppercase transition-all ${viewMode === 'text' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                    className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-[10px] font-bold uppercase transition-all ${viewMode === 'text' ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm' : 'text-slate-500 hover:text-slate-700 dark:text-slate-400'}`}
                   >
-                    <CommandLineIcon className="h-3 w-3" />
+                    <Terminal size={14} />
                     ATS View
                   </button>
                 </div>
-                <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Document View</span>
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Document View</span>
               </div>
               
               <div className="aspect-[1/1.4] w-full">
                 {viewMode === "preview" ? (
-                  <iframe 
-                    src={`${fileUrl}#navpanes=0&toolbar=0`} 
-                    className={isLoading ? "opacity-20 transition-opacity" : "h-full w-full transition-opacity"} 
+                  <iframe
+                    src={`${fileUrl}#navpanes=0&toolbar=0`}
+                    className={isLoading ? "opacity-20 transition-opacity" : "h-full w-full transition-opacity"}
                   />
                 ) : (
-                  <div className="h-full p-4">
+                  <div className="h-full p-4 overflow-auto">
                     <PlainTextPreview textItems={textItems} />
                   </div>
                 )}
@@ -144,34 +144,34 @@ export default function ResumeParser() {
             <ResumeGrade resume={resume} />
             
             <div className="grid gap-6 sm:grid-cols-2">
-              <ResultCard title="Profile" icon={UserIcon}>
-                <p className="text-xl font-bold">{resume.profile.name || "Not found"}</p>
-                <p className="text-sm text-gray-500">{resume.profile.email}</p>
-                <p className="text-sm text-gray-500">{resume.profile.phone}</p>
-                <p className="mt-2 text-xs italic text-gray-400 line-clamp-2">{resume.profile.summary}</p>
+              <ResultCard title="Profile" icon={User}>
+                <p className="text-xl font-bold text-slate-900 dark:text-white">{resume.profile.name || "Not found"}</p>
+                <p className="text-sm text-slate-500 dark:text-slate-400">{resume.profile.email}</p>
+                <p className="text-sm text-slate-500 dark:text-slate-400">{resume.profile.phone}</p>
+                <p className="mt-2 text-xs italic text-slate-400 line-clamp-2">{resume.profile.summary}</p>
               </ResultCard>
 
-              <ResultCard title="Education" icon={AcademicCapIcon}>
+              <ResultCard title="Education" icon={GraduationCap}>
                 {resume.educations.map((edu, i) => (
-                  <div key={i} className={i > 0 ? "mt-4 border-t border-gray-50 pt-4" : ""}>
-                    <p className="font-bold">{edu.school}</p>
-                    <p className="text-sm text-gray-500">{edu.degree}</p>
-                    <p className="text-xs text-sky-500 font-medium">{edu.date}</p>
+                  <div key={i} className={i > 0 ? "mt-4 border-t border-slate-100 dark:border-slate-800 pt-4" : ""}>
+                    <p className="font-bold text-slate-900 dark:text-white">{edu.school}</p>
+                    <p className="text-sm text-slate-500 dark:text-slate-400">{edu.degree}</p>
+                    <p className="text-xs text-indigo-600 dark:text-indigo-400 font-medium">{edu.date}</p>
                   </div>
                 ))}
               </ResultCard>
 
               <div className="sm:col-span-2">
-                <ResultCard title="Work Experience" icon={BriefcaseIcon}>
+                <ResultCard title="Work Experience" icon={Briefcase}>
                   <div className="grid gap-6 md:grid-cols-2">
                     {resume.workExperiences.map((work, i) => (
                       <div key={i} className="space-y-1">
-                        <p className="font-bold">{work.company}</p>
-                        <p className="text-sm font-medium text-gray-600">{work.jobTitle}</p>
-                        <p className="text-xs text-gray-400">{work.date}</p>
+                        <p className="font-bold text-slate-900 dark:text-white">{work.company}</p>
+                        <p className="text-sm font-medium text-slate-600 dark:text-slate-300">{work.jobTitle}</p>
+                        <p className="text-xs text-slate-400">{work.date}</p>
                         <ul className="mt-2 space-y-1">
                           {work.descriptions.slice(0, 2).map((desc, j) => (
-                            <li key={j} className="text-xs text-gray-500 line-clamp-1">• {desc}</li>
+                            <li key={j} className="text-xs text-slate-500 dark:text-slate-400 line-clamp-1">• {desc}</li>
                           ))}
                         </ul>
                       </div>
@@ -180,42 +180,41 @@ export default function ResumeParser() {
                 </ResultCard>
               </div>
 
-              <ResultCard title="Skills" icon={WrenchIcon}>
+              <ResultCard title="Skills" icon={Wrench}>
                 <div className="flex flex-wrap gap-2">
                   {resume.skills.featuredSkills.filter(s => s.skill).map((s, i) => (
-                    <span key={i} className="rounded-lg bg-gray-100 px-2 py-1 text-xs font-bold text-gray-600">
+                    <span key={i} className="rounded-lg bg-slate-100 dark:bg-slate-800 px-2 py-1 text-xs font-bold text-slate-600 dark:text-slate-300">
                       {s.skill}
                     </span>
                   ))}
                   {resume.skills.descriptions.map((desc, i) => (
-                    <span key={i} className="rounded-lg bg-sky-50 px-2 py-1 text-xs font-bold text-sky-600">
+                    <span key={i} className="rounded-lg bg-indigo-50 dark:bg-indigo-900/30 px-2 py-1 text-xs font-bold text-indigo-600 dark:text-indigo-400">
                       {desc}
                     </span>
                   ))}
                 </div>
               </ResultCard>
 
-              <ResultCard title="Additional Info" icon={DocumentTextIcon}>
+              <ResultCard title="Additional Info" icon={FileText}>
                 <div className="space-y-2">
                   {resume.custom.descriptions.length > 0 ? (
                     resume.custom.descriptions.map((desc, i) => (
-                      <p key={i} className="text-xs text-gray-600 border-l-2 border-purple-200 pl-2 py-1 bg-purple-50/30 rounded-r">
+                      <p key={i} className="text-xs text-slate-600 dark:text-slate-400 border-l-2 border-indigo-200 dark:border-indigo-800 pl-2 py-1 bg-indigo-50/30 dark:bg-indigo-900/10 rounded-r">
                         {desc}
                       </p>
                     ))
                   ) : (
-                    <p className="text-xs text-gray-400 italic">No additional sections found (Certifications, Languages, etc.)</p>
+                    <p className="text-xs text-slate-400 italic">No additional sections found (Certifications, Languages, etc.)</p>
                   )}
                 </div>
               </ResultCard>
 
-              <ResultCard title="Raw Sections" icon={CommandLineIcon}>
-
-                <div className="max-h-40 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-200">
+              <ResultCard title="Raw Sections" icon={Terminal}>
+                <div className="max-h-40 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-800">
                   {Object.keys(sections).map((section, i) => (
-                    <div key={i} className="mb-2 flex items-center justify-between rounded-lg bg-gray-50 px-3 py-2">
-                      <span className="text-xs font-bold text-gray-600 capitalize">{section}</span>
-                      <span className="text-[10px] font-bold text-gray-400">{sections[section].length} lines</span>
+                    <div key={i} className="mb-2 flex items-center justify-between rounded-lg bg-slate-50 dark:bg-slate-800 px-3 py-2">
+                      <span className="text-xs font-bold text-slate-600 dark:text-slate-300 capitalize">{section}</span>
+                      <span className="text-[10px] font-bold text-slate-400">{sections[section].length} lines</span>
                     </div>
                   ))}
                 </div>

@@ -53,7 +53,7 @@ export const ProjectsForm = () => {
             <Input
               name="project"
               label="Project Name"
-              placeholder="OpenResume"
+              placeholder="CareerCraft"
               value={project}
               onChange={handleProjectChange}
               labelClassName="col-span-4"

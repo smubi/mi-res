@@ -1,49 +1,66 @@
 import Link from "next/link";
-import { FlexboxSpacer } from "components/FlexboxSpacer";
 import { AutoTypingResume } from "home/AutoTypingResume";
-import { SparklesIcon } from "@heroicons/react/24/solid";
+import { Sparkles, ArrowRight, CheckCircle2 } from "lucide-react";
 
 export const Hero = () => {
   return (
-    <section className="lg:flex lg:h-[825px] lg:justify-center">
-      <FlexboxSpacer maxWidth={75} minWidth={0} className="hidden lg:block" />
-      <div className="mx-auto max-w-xl pt-8 text-center lg:mx-0 lg:grow lg:pt-32 lg:text-left">
-        <div className="inline-flex items-center gap-2 rounded-full bg-purple-50 px-3 py-1 text-sm font-bold text-purple-700 ring-1 ring-inset ring-purple-700/10 mb-6">
-          <SparklesIcon className="h-4 w-4" />
-          <span>Now with AI-Powered Optimization</span>
-        </div>
-        <h1 className="text-primary pb-2 text-4xl font-bold lg:text-6xl leading-tight">
-          Tailor your resume
-          <br />
-          with AI precision
-        </h1>
-        <p className="mt-3 text-lg lg:mt-5 lg:text-xl text-gray-600">
-          The free, open-source builder that matches your skills to job descriptions using the latest ResumeFlow research.
-        </p>
-        <div className="flex flex-col sm:flex-row items-center gap-4 mt-8 lg:mt-14 justify-center lg:justify-start">
-          <Link href="/resume-import" className="btn-primary">
-            Create Resume <span aria-hidden="true">→</span>
-          </Link>
-          <Link href="/resume-parser" className="text-sm font-semibold text-gray-900 hover:text-sky-600 transition-colors">
-            Try Resume Parser
-          </Link>
-        </div>
-        <p className="mt-4 text-xs text-gray-500">No sign up required • 100% Private</p>
-        
-        <div className="mt-12 lg:mt-24 grid grid-cols-2 gap-8 border-t border-gray-100 pt-8">
-          <div>
-            <p className="text-2xl font-bold text-gray-900">95%</p>
-            <p className="text-sm text-gray-500 font-medium">ATS Pass Rate</p>
+    <section className="relative overflow-hidden pt-16 pb-24 lg:pt-32 lg:pb-40">
+      <div className="container mx-auto px-4">
+        <div className="flex flex-col lg:flex-row items-center gap-16">
+          <div className="flex-1 text-center lg:text-left">
+            <div className="inline-flex items-center gap-2 rounded-full bg-indigo-50 px-4 py-1.5 text-sm font-semibold text-indigo-600 ring-1 ring-inset ring-indigo-600/20 mb-8 dark:bg-indigo-900/30 dark:text-indigo-400">
+              <Sparkles className="h-4 w-4" />
+              <span>AI-Powered Career Acceleration</span>
+            </div>
+            <h1 className="text-slate-900 dark:text-white text-5xl lg:text-7xl font-extrabold tracking-tight leading-[1.1] mb-6">
+              Build a resume that <br />
+              <span className="text-indigo-600">gets you hired.</span>
+            </h1>
+            <p className="text-slate-600 dark:text-slate-400 text-lg lg:text-xl max-w-2xl mx-auto lg:mx-0 mb-10 leading-relaxed">
+              CareerCraft uses advanced AI to optimize your resume for modern ATS systems, ensuring you stand out to recruiters and land more interviews.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start mb-12">
+              <Link href="/resume-builder" className="group flex items-center gap-2 bg-indigo-600 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-200 dark:shadow-none">
+                Start Building Free
+                <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              </Link>
+              <Link href="/resume-parser" className="text-slate-600 dark:text-slate-400 font-semibold hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors px-6 py-4">
+                Analyze Existing Resume
+              </Link>
+            </div>
+
+            <div className="flex flex-wrap justify-center lg:justify-start gap-6">
+              {[
+                "No sign up required",
+                "100% Private & Secure",
+                "ATS Optimized"
+              ].map((text) => (
+                <div key={text} className="flex items-center gap-2 text-sm font-medium text-slate-500 dark:text-slate-500">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                  {text}
+                </div>
+              ))}
+            </div>
           </div>
-          <div>
-            <p className="text-2xl font-bold text-gray-900">10k+</p>
-            <p className="text-sm text-gray-500 font-medium">Resumes Created</p>
+
+          <div className="flex-1 relative w-full max-w-2xl lg:max-w-none">
+            <div className="absolute -inset-4 bg-gradient-to-tr from-indigo-500/20 to-emerald-500/20 blur-3xl rounded-full opacity-50" />
+            <div className="relative bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden">
+              <div className="h-12 bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-700 flex items-center px-4 gap-2">
+                <div className="flex gap-1.5">
+                  <div className="w-3 h-3 rounded-full bg-red-400" />
+                  <div className="w-3 h-3 rounded-full bg-amber-400" />
+                  <div className="w-3 h-3 rounded-full bg-emerald-400" />
+                </div>
+                <div className="mx-auto text-xs font-medium text-slate-400">careercraft.io/editor</div>
+              </div>
+              <div className="p-4 lg:p-8">
+                <AutoTypingResume />
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-      <FlexboxSpacer maxWidth={100} minWidth={50} className="hidden lg:block" />
-      <div className="mt-6 flex justify-center lg:mt-4 lg:block lg:grow">
-        <AutoTypingResume />
       </div>
     </section>
   );

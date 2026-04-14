@@ -1,31 +1,53 @@
+import { Upload, Layout, Download } from "lucide-react";
+
 const STEPS = [
-  { title: "Add a resume pdf", text: "or create from scratch" },
-  { title: "Preview design", text: "and make edits" },
-  { title: "Download new resume", text: "and apply with confidence" },
+  {
+    title: "Import or Start Fresh",
+    text: "Upload your existing PDF or start with a clean slate using our intuitive editor.",
+    icon: Upload,
+    color: "bg-blue-500"
+  },
+  {
+    title: "Optimize with AI",
+    text: "Real-time feedback and AI suggestions help you tailor your content for specific roles.",
+    icon: Layout,
+    color: "bg-indigo-500"
+  },
+  {
+    title: "Download & Apply",
+    text: "Export your ATS-ready resume in seconds and land your dream job.",
+    icon: Download,
+    color: "bg-emerald-500"
+  },
 ];
 
 export const Steps = () => {
   return (
-    <section className="mx-auto mt-8 rounded-2xl bg-sky-50 bg-dot px-8 pb-12 pt-10 lg:mt-2">
-      <h1 className="text-center text-3xl font-bold">3 Simple Steps</h1>
-      <div className="mt-8 flex justify-center">
-        <dl className="flex flex-col gap-y-10 lg:flex-row lg:justify-center lg:gap-x-20">
-          {STEPS.map(({ title, text }, idx) => (
-            <div className="relative self-start pl-14" key={idx}>
-              <dt className="text-lg font-bold">
-                <div className="bg-primary absolute left-0 top-1 flex h-10 w-10 select-none items-center justify-center rounded-full p-[3.5px] opacity-80">
-                  <div className="flex h-full w-full items-center justify-center rounded-full bg-white">
-                    <div className="text-primary -mt-0.5 text-2xl">
-                      {idx + 1}
-                    </div>
-                  </div>
+    <section className="py-24 bg-slate-50 dark:bg-slate-900/50 rounded-3xl my-16">
+      <div className="container mx-auto px-4">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 dark:text-white mb-4">How it works</h2>
+          <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+            Three simple steps to a professional, high-impact resume.
+          </p>
+        </div>
+        
+        <div className="grid lg:grid-cols-3 gap-12">
+          {STEPS.map(({ title, text, icon: Icon, color }, idx) => (
+            <div className="relative group" key={idx}>
+              <div className="flex flex-col items-center text-center">
+                <div className={`mb-6 flex h-16 w-16 items-center justify-center rounded-2xl ${color} text-white shadow-lg transition-transform group-hover:-translate-y-1`}>
+                  <Icon size={32} />
                 </div>
-                {title}
-              </dt>
-              <dd>{text}</dd>
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">{title}</h3>
+                <p className="text-slate-600 dark:text-slate-400 leading-relaxed">{text}</p>
+              </div>
+              {idx < STEPS.length - 1 && (
+                <div className="hidden lg:block absolute top-8 left-[calc(50%+4rem)] w-[calc(100%-8rem)] h-px bg-slate-200 dark:bg-slate-800" />
+              )}
             </div>
           ))}
-        </dl>
+        </div>
       </div>
     </section>
   );

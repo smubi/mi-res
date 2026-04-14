@@ -1,56 +1,50 @@
-import { SparklesIcon, MagnifyingGlassIcon, ShieldCheckIcon, CodeBracketIcon } from "@heroicons/react/24/outline";
-import { Link } from "components/documentation";
+import { Sparkles, Search, ShieldCheck, Zap } from "lucide-react";
 
 const FEATURES = [
   {
-    icon: <SparklesIcon className="h-8 w-8 text-purple-600" />,
+    icon: <Sparkles className="h-8 w-8 text-indigo-600" />,
     title: "AI Optimization",
-    text: "Automatically refine your bullet points with strong action verbs and impact-focused language inspired by ResumeFlow research.",
+    text: "Automatically refine your bullet points with strong action verbs and impact-focused language that catches recruiter attention.",
   },
   {
-    icon: <MagnifyingGlassIcon className="h-8 w-8 text-sky-600" />,
-    title: "JD Keyword Matching",
-    text: "Paste any job description to see a real-time match score and identify missing keywords that recruiters are looking for.",
+    icon: <Search className="h-8 w-8 text-sky-600" />,
+    title: "ATS Keyword Matching",
+    text: "Analyze job descriptions in real-time to identify missing keywords and boost your match score for automated screening.",
   },
   {
-    icon: <ShieldCheckIcon className="h-8 w-8 text-green-600" />,
+    icon: <ShieldCheck className="h-8 w-8 text-emerald-600" />,
     title: "Privacy First",
-    text: "Your data never leaves your browser. We don't use a database, ensuring your personal information stays 100% private.",
+    text: "Your data stays in your browser. We don't store your personal information on our servers, ensuring 100% privacy.",
   },
   {
-    icon: <CodeBracketIcon className="h-8 w-8 text-gray-600" />,
-    title: "Open Source",
-    text: (
-      <>
-        Built by the community for the community. View our source code on{" "}
-        <Link href="https://github.com/xitanggg/open-resume">GitHub</Link>.
-      </>
-    ),
+    icon: <Zap className="h-8 w-8 text-amber-600" />,
+    title: "Instant Export",
+    text: "Generate perfectly formatted, professional PDF resumes in seconds. No more fighting with Word or Google Docs margins.",
   },
 ];
 
 export const Features = () => {
   return (
-    <section className="py-16 lg:py-36 bg-white rounded-3xl my-12 shadow-sm border border-gray-50">
+    <section className="py-24 lg:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-base font-semibold leading-7 text-sky-600 uppercase tracking-widest">Powerful Tools</h2>
-          <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-            Everything you need to land the interview
+        <div className="mx-auto max-w-2xl text-center mb-20">
+          <h2 className="text-indigo-600 font-bold tracking-wider uppercase text-sm mb-4">Powerful Features</h2>
+          <p className="text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white sm:text-5xl">
+            Everything you need to <br /> land the interview
           </p>
         </div>
-        <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-none">
-          <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-4">
+        <div className="mx-auto max-w-2xl lg:max-w-none">
+          <dl className="grid grid-cols-1 gap-x-12 gap-y-16 lg:grid-cols-4">
             {FEATURES.map((feature) => (
-              <div key={feature.title} className="flex flex-col items-center text-center">
-                <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-gray-50 ring-1 ring-gray-100">
+              <div key={feature.title} className="flex flex-col items-start">
+                <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-slate-50 dark:bg-slate-800 ring-1 ring-slate-200 dark:ring-slate-700 shadow-sm">
                   {feature.icon}
                 </div>
-                <dt className="text-lg font-bold leading-7 text-gray-900">
+                <dt className="text-xl font-bold text-slate-900 dark:text-white mb-4">
                   {feature.title}
                 </dt>
-                <dd className="mt-4 flex flex-auto flex-col text-base leading-7 text-gray-600">
-                  <p className="flex-auto">{feature.text}</p>
+                <dd className="text-slate-600 dark:text-slate-400 leading-relaxed">
+                  {feature.text}
                 </dd>
               </div>
             ))}
