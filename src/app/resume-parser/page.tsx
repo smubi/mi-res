@@ -15,6 +15,7 @@ import { saveStateToLocalStorage } from "lib/redux/local-storage";
 import { initialSettings } from "lib/redux/settingsSlice";
 import { initialAIState } from "lib/redux/aiSlice";
 import { initialSnapshotState } from "lib/redux/snapshotSlice";
+import { initialJobState } from "lib/redux/jobSlice";
 import { 
   UserIcon, 
   AcademicCapIcon, 
@@ -59,6 +60,7 @@ export default function ResumeParser() {
       settings: initialSettings,
       ai: initialAIState,
       snapshots: initialSnapshotState,
+      jobs: initialJobState,
     });
     router.push("/resume-builder");
   };

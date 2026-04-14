@@ -9,6 +9,7 @@ import {
 import { type ShowForm, initialSettings } from "lib/redux/settingsSlice";
 import { initialAIState } from "lib/redux/aiSlice";
 import { initialSnapshotState } from "lib/redux/snapshotSlice";
+import { initialJobState } from "lib/redux/jobSlice";
 import { useRouter } from "next/navigation";
 import addPdfSrc from "public/assets/add-pdf.svg";
 import Image from "next/image";
@@ -97,6 +98,7 @@ export const ResumeDropzone = ({
       settings,
       ai: initialAIState,
       snapshots: initialSnapshotState,
+      jobs: initialJobState,
     });
     router.push("/resume-builder");
   };

@@ -21,6 +21,7 @@ import { CoverLetterGenerator } from "./CoverLetterGenerator";
 import { ResumeChecklist } from "./ResumeChecklist";
 import { ResumeSnapshots } from "./ResumeSnapshots";
 import { ResumeComparison } from "./ResumeComparison";
+import { JobTracker } from "./JobTracker";
 import { InterviewPrep } from "./InterviewPrep";
 import { VerbLibrary } from "./VerbLibrary";
 import { QuantificationNudge } from "./QuantificationNudge";
@@ -96,6 +97,7 @@ export const ResumeForm = () => {
               <ThemeForm />
               <ResumeSnapshots />
               <ResumeComparison />
+              <JobTracker />
             </>
           )}
           

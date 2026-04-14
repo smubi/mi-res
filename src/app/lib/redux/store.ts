@@ -3,6 +3,7 @@ import resumeReducer from "lib/redux/resumeSlice";
 import settingsReducer from "lib/redux/settingsSlice";
 import aiReducer from "lib/redux/aiSlice";
 import snapshotReducer from "lib/redux/snapshotSlice";
+import jobReducer from "lib/redux/jobSlice";
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     settings: settingsReducer,
     ai: aiReducer,
     snapshots: snapshotReducer,
+    jobs: jobReducer,
   },
 });
 

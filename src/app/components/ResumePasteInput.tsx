@@ -7,6 +7,9 @@ import {
   getHasUsedAppBefore,
 } from "lib/redux/local-storage";
 import { initialSettings, type ShowForm } from "lib/redux/settingsSlice";
+import { initialAIState } from "lib/redux/aiSlice";
+import { initialSnapshotState } from "lib/redux/snapshotSlice";
+import { initialJobState } from "lib/redux/jobSlice";
 import { deepClone } from "lib/deep-clone";
 import { LockClosedIcon } from "@heroicons/react/24/solid";
 import type { FeaturedSkill } from "lib/redux/types";
@@ -50,8 +53,9 @@ export const ResumePasteInput = () => {
       saveStateToLocalStorage({
         resume,
         settings,
-        ai: { jobTitle: "", jobDescription: "", isAnalyzing: false, coverLetter: "" },
-        snapshots: { snapshots: [] },
+        ai: initialAIState,
+        snapshots: initialSnapshotState,
+        jobs: initialJobState,
       });
       router.push("/resume-builder");
     } catch (err) {

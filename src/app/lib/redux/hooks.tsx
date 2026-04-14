@@ -19,6 +19,7 @@ import {
 } from "lib/redux/settingsSlice";
 import { setJobDescription, setCoverLetter, initialAIState } from "lib/redux/aiSlice";
 import { setSnapshots, initialSnapshotState } from "lib/redux/snapshotSlice";
+import { setJobs, initialJobState } from "lib/redux/jobSlice";
 import { deepMerge } from "lib/deep-merge";
 import type { Resume } from "lib/redux/types";
 
@@ -71,6 +72,10 @@ export const useSetInitialStore = () => {
 
     if (state.snapshots && state.snapshots.snapshots) {
       dispatch(setSnapshots(state.snapshots.snapshots));
+    }
+
+    if (state.jobs && state.jobs.jobs) {
+      dispatch(setJobs(state.jobs.jobs));
     }
   }, [dispatch]);
 };
