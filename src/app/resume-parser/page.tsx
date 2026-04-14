@@ -195,7 +195,22 @@ export default function ResumeParser() {
                 </div>
               </ResultCard>
 
-              <ResultCard title="Raw Sections" icon={DocumentTextIcon}>
+              <ResultCard title="Additional Info" icon={DocumentTextIcon}>
+                <div className="space-y-2">
+                  {resume.custom.descriptions.length > 0 ? (
+                    resume.custom.descriptions.map((desc, i) => (
+                      <p key={i} className="text-xs text-gray-600 border-l-2 border-purple-200 pl-2 py-1 bg-purple-50/30 rounded-r">
+                        {desc}
+                      </p>
+                    ))
+                  ) : (
+                    <p className="text-xs text-gray-400 italic">No additional sections found (Certifications, Languages, etc.)</p>
+                  )}
+                </div>
+              </ResultCard>
+
+              <ResultCard title="Raw Sections" icon={CommandLineIcon}>
+
                 <div className="max-h-40 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-200">
                   {Object.keys(sections).map((section, i) => (
                     <div key={i} className="mb-2 flex items-center justify-between rounded-lg bg-gray-50 px-3 py-2">

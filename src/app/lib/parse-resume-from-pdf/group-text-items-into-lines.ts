@@ -8,28 +8,42 @@ import type { TextItems, Line, Lines } from "lib/parse-resume-from-pdf/types";
 export const groupTextItemsIntoLines = (textItems: TextItems): Lines => {
   const lines: Lines = [];
 
-  // Group text items into lines based on hasEOL
-  let line: Line = [];
-  for (let item of textItems) {
-    // If item is EOL, add current line to lines and start a new empty line
-    if (item.hasEOL) {
-      if (item.text.trim() !== "") {
-        line.push({ ...item });
-      }
-      lines.push(line);
-      line = [];
+  // Sort text items by y position (descending) and then x position (ascending)
+  // This is more robust than relying on hasEOL which might be missing or incorrect
+  const sortedTextItems = [...textItems].sort((a, b) => {
+    const yDiff = b.y - a.y;
+    if (Math.abs(yDiff) > 1) {
+      // Use a small threshold for y difference
+      return yDiff;
     }
-    // Otherwise, add item to current line
-    else if (item.text.trim() !== "") {
-      line.push({ ...item });
+    return a.x - b.x;
+  });
+
+  // Group text items into lines based on y position
+  let currentLine: Line = [];
+  for (let i = 0; i < sortedTextItems.length; i++) {
+    const item = sortedTextItems[i];
+    if (currentLine.length === 0) {
+      currentLine.push(item);
+    } else {
+      const lastItem = currentLine[currentLine.length - 1];
+      const yDiff = Math.abs(item.y - lastItem.y);
+
+      if (yDiff <= 2) {
+        // Threshold for same line
+        currentLine.push(item);
+      } else {
+        lines.push(currentLine);
+        currentLine = [item];
+      }
     }
   }
-  // Add last line if there is item in last line
-  if (line.length > 0) {
-    lines.push(line);
+  if (currentLine.length > 0) {
+    lines.push(currentLine);
   }
 
   // Many pdf docs are not well formatted, e.g. due to converting from other docs.
+
   // This creates many noises, where a single text item is divided into multiple
   // ones. This step is to merge adjacent text items if their distance is smaller
   // than a typical char width to filter out those noises.

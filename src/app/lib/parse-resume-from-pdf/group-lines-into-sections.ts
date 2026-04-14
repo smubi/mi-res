@@ -70,12 +70,13 @@ const SECTION_TITLE_KEYWORDS = [
 
 const isSectionTitle = (line: Line, lineNumber: number) => {
   const isFirstTwoLines = lineNumber < 2;
-  const hasMoreThanOneItemInLine = line.length > 1;
   const hasNoItemInLine = line.length === 0;
-  if (isFirstTwoLines || hasMoreThanOneItemInLine || hasNoItemInLine) {
+  if (isFirstTwoLines || hasNoItemInLine) {
     return false;
   }
 
+  // For multi-column resumes, a section title might be followed by other text in the same line.
+  // We check if the first item in the line looks like a section title.
   const textItem = line[0];
 
   // The main heuristic to determine a section title is to check if the text is double emphasized
@@ -84,7 +85,13 @@ const isSectionTitle = (line: Line, lineNumber: number) => {
     return true;
   }
 
+  // If there's more than one item, we are more strict to avoid false positives
+  if (line.length > 1) {
+    return false;
+  }
+
   // The following is a fallback heuristic to detect section title if it includes a keyword match
+
   // (This heuristics is not well tested and may not work well)
   const text = textItem.text.trim();
   const textHasAtMost2Words =
