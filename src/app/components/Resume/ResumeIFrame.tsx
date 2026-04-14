@@ -11,8 +11,10 @@ import {
 } from "lib/constants";
 import dynamic from "next/dynamic";
 import { getAllFontFamiliesToLoad } from "components/fonts/lib";
+import { HeatmapOverlay } from "./HeatmapOverlay";
 
 const getIframeInitialContent = (isA4: boolean) => {
+
   const width = isA4 ? A4_WIDTH_PT : LETTER_WIDTH_PT;
   const allFontFamilies = getAllFontFamiliesToLoad();
 
@@ -57,11 +59,13 @@ const ResumeIframe = ({
   scale,
   children,
   enablePDFViewer = false,
+  showHeatmap = false,
 }: {
   documentSize: string;
   scale: number;
   children: React.ReactNode;
   enablePDFViewer?: boolean;
+  showHeatmap?: boolean;
 }) => {
   const isA4 = documentSize === "A4";
   const iframeInitialContent = useMemo(
@@ -85,9 +89,10 @@ const ResumeIframe = ({
         maxWidth: `${width * scale}px`,
         maxHeight: `${height * scale}px`,
       }}
+      className="relative"
     >
       {/* There is an outer div and an inner div here. The inner div sets the iframe width and uses transform scale to zoom in/out the resume iframe.
-        While zooming out or scaling down via transform, the element appears smaller but still occupies the same width/height. Therefore, we use the 
+        While zooming out or scaling down via transform, the element appears smaller but still occupies the same width/height. Therefore, we use the
         outer div to restrict the max width & height proportionally */}
       <div
         style={{
@@ -95,7 +100,7 @@ const ResumeIframe = ({
           height: `${height}px`,
           transform: `scale(${scale})`,
         }}
-        className={`origin-top-left bg-white shadow-lg`}
+        className={`origin-top-left bg-white shadow-lg relative`}
       >
         <Frame
           style={{ width: "100%", height: "100%" }}
@@ -105,6 +110,7 @@ const ResumeIframe = ({
         >
           {children}
         </Frame>
+        {showHeatmap && <HeatmapOverlay width={width} height={height} />}
       </div>
     </div>
   );
