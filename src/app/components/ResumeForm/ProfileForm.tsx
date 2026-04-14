@@ -4,9 +4,12 @@ import { useAppDispatch, useAppSelector } from "lib/redux/hooks";
 import { changeProfile, selectProfile } from "lib/redux/resumeSlice";
 import { ResumeProfile } from "lib/redux/types";
 import { AIOptimizer } from "components/ResumeForm/AIOptimizer";
+import { selectJobDescription } from "lib/redux/aiSlice";
+import { SparklesIcon } from "@heroicons/react/24/outline";
 
 export const ProfileForm = () => {
   const profile = useAppSelector(selectProfile);
+  const jd = useAppSelector(selectJobDescription);
   const dispatch = useAppDispatch();
   const { name, email, phone, url, summary, location } = profile;
 
@@ -33,7 +36,15 @@ export const ProfileForm = () => {
           <Textarea
             label={
               <div className="flex items-center justify-between">
-                <span>Professional Summary</span>
+                <div className="flex items-center gap-2">
+                  <span>Professional Summary</span>
+                  {jd && (
+                    <span className="flex items-center gap-1 rounded-full bg-purple-50 px-2 py-0.5 text-[10px] font-bold text-purple-600 ring-1 ring-purple-100">
+                      <SparklesIcon className="h-3 w-3" />
+                      Tailoring Active
+                    </span>
+                  )}
+                </div>
                 <AIOptimizer
                   currentText={summary}
                   onOptimize={handleAIOptimize}

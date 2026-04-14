@@ -33,6 +33,8 @@ import { ToneStyleChecker } from "./ToneStyleChecker";
 import { NetworkingAssistant } from "./NetworkingAssistant";
 import { HealthDashboard } from "./HealthDashboard";
 import { RecruiterInsights } from "./RecruiterInsights";
+import { ATSCompatibilityReport } from "./ATSCompatibilityReport";
+import { SkillMatchVisualizer } from "./SkillMatchVisualizer";
 import { FlexboxSpacer } from "components/FlexboxSpacer";
 import { FormTabs, TabType } from "./FormTabs";
 import { Accordion, AccordionItem } from "./Form/Accordion";
@@ -109,13 +111,15 @@ export const ResumeForm = () => {
                 <AccordionItem title="Job Matching">
                   <div className="flex flex-col gap-6">
                     <JobDescriptionForm />
+                    <SkillMatchVisualizer />
                     <JDAnalyzer />
                     <KeywordDensity />
                     <ResumeAnalysis />
                   </div>
                 </AccordionItem>
-                <AccordionItem title="Content Improvement">
+                <AccordionItem title="Technical & Content">
                   <div className="flex flex-col gap-6">
+                    <ATSCompatibilityReport />
                     <QuantificationNudge />
                     <SkillSuggestions />
                     <VerbLibrary />
