@@ -25,6 +25,8 @@ import { VerbLibrary } from "./VerbLibrary";
 import { QuantificationNudge } from "./QuantificationNudge";
 import { LiveGrader } from "./LiveGrader";
 import { JDAnalyzer } from "./JDAnalyzer";
+import { ScoreBreakdown } from "./ScoreBreakdown";
+import { KeywordDensity } from "./KeywordDensity";
 import { FlexboxSpacer } from "components/FlexboxSpacer";
 import { FormTabs, TabType } from "./FormTabs";
 import { cx } from "lib/cx";
@@ -71,8 +73,10 @@ export const ResumeForm = () => {
           {activeTab === "optimize" && (
             <>
               <LiveGrader />
+              <ScoreBreakdown />
               <JobDescriptionForm />
               <JDAnalyzer />
+              <KeywordDensity />
               <ResumeAnalysis />
               <QuantificationNudge />
               <SkillSuggestions />
