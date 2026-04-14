@@ -79,6 +79,7 @@ export const ResumeForm = () => {
               <LiveGrader />
               <ScoreBreakdown />
               <JobDescriptionForm />
+              <NetworkingAssistant />
               <JDAnalyzer />
               <KeywordDensity />
               <ResumeAnalysis />
@@ -87,7 +88,6 @@ export const ResumeForm = () => {
               <SkillSuggestions />
               <VerbLibrary />
               <InterviewPrep />
-              <NetworkingAssistant />
               <ResumeChecklist />
               <CoverLetterGenerator />
               <SmartSuggestions />
