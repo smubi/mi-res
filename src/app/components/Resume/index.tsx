@@ -162,27 +162,43 @@ export const Resume = () => {
           </div>
           
           {(showHeatmap || showPath || isSimulating) && (
-            <div className="absolute right-4 top-4 z-40 flex flex-col gap-2 rounded-lg border border-gray-200 bg-white/90 p-3 shadow-sm backdrop-blur-sm dark:border-gray-700 dark:bg-gray-800/90">
+            <div className="absolute right-4 top-4 z-40 flex flex-col gap-3 rounded-xl border border-gray-200 bg-white/95 p-4 shadow-xl backdrop-blur-md dark:border-gray-700 dark:bg-gray-800/95 animate-in slide-in-from-right-4 duration-300">
               <div className="flex items-center justify-between gap-4">
-                <div className="text-xs font-semibold text-gray-500 dark:text-gray-400">
-                  {isSimulating ? `Scanning... ${timeLeft}s` : showPath ? 'Scanning Path' : 'Recruiter Focus'}
+                <div className="flex items-center gap-2">
+                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-orange-100 dark:bg-orange-900/30">
+                    <FireIcon className="h-3.5 w-3.5 text-orange-600" />
+                  </div>
+                  <span className="text-xs font-bold text-gray-700 dark:text-gray-200 uppercase tracking-tight">
+                    {isSimulating ? `Scanning... ${timeLeft}s` : showPath ? 'Eye Tracking Path' : 'Recruiter Focus'}
+                  </span>
                 </div>
                 {isSimulating && <div className="h-2 w-2 animate-ping rounded-full bg-purple-500" />}
               </div>
+              
               {!showPath && (
-                <>
-                  <div className="flex items-center gap-2">
-                    <div className="h-3 w-24 rounded-full bg-gradient-to-r from-blue-500 via-green-500 via-yellow-500 to-red-500" />
+                <div className="space-y-2">
+                  <div className="h-2 w-full rounded-full bg-gradient-to-r from-blue-500 via-green-500 via-yellow-500 to-red-500 shadow-inner" />
+                  <div className="flex justify-between text-[10px] font-medium text-gray-400 uppercase tracking-widest">
+                    <span>Cold</span>
+                    <span>Hot</span>
                   </div>
-                  <div className="flex justify-between text-[10px] text-gray-400">
-                    <span>Low</span>
-                    <span>High</span>
-                  </div>
-                </>
+                  <p className="text-[10px] leading-tight text-gray-500 dark:text-gray-400 italic">
+                    Red areas indicate where recruiters spend 80% of their time.
+                  </p>
+                </div>
               )}
+              
               {showPath && (
-                <div className="text-[10px] text-purple-600 font-bold">
-                  F-SHAPED PATTERN ACTIVE
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 rounded-lg bg-purple-50 px-2 py-1.5 dark:bg-purple-900/20">
+                    <div className="h-1.5 w-1.5 rounded-full bg-purple-600 animate-pulse" />
+                    <span className="text-[10px] font-black text-purple-700 dark:text-purple-300 uppercase">
+                      F-SHAPED PATTERN ACTIVE
+                    </span>
+                  </div>
+                  <p className="text-[10px] leading-tight text-gray-500 dark:text-gray-400">
+                    Simulating the natural scanning path of a recruiter's eyes.
+                  </p>
                 </div>
               )}
             </div>
