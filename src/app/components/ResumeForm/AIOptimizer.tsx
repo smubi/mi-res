@@ -4,6 +4,7 @@ import { SparklesIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
 import { useAppSelector } from "lib/redux/hooks";
 import { selectJobDescription } from "lib/redux/aiSlice";
+import { selectResume } from "lib/redux/resumeSlice";
 
 interface AIOptimizerProps {
   onOptimize: (suggestion: string) => void;
@@ -13,6 +14,7 @@ interface AIOptimizerProps {
 export const AIOptimizer = ({ onOptimize, currentText }: AIOptimizerProps) => {
   const [isOptimizing, setIsOptimizing] = useState(false);
   const jd = useAppSelector(selectJobDescription);
+  const resume = useAppSelector(selectResume);
 
   const handleOptimize = () => {
     if (!currentText || isOptimizing) return;
@@ -21,40 +23,53 @@ export const AIOptimizer = ({ onOptimize, currentText }: AIOptimizerProps) => {
     
     // Simulate AI processing with context
     setTimeout(() => {
-      const actionVerbs = ["Spearheaded", "Architected", "Orchestrated", "Optimized", "Leveraged", "Engineered", "Pioneered", "Catalyzed"];
+      const actionVerbs = ["Spearheaded", "Architected", "Orchestrated", "Optimized", "Leveraged", "Engineered", "Pioneered", "Catalyzed", "Streamlined", "Augmented"];
       const randomVerb = actionVerbs[Math.floor(Math.random() * actionVerbs.length)];
       
       let suggestion = "";
       const words = currentText.trim().split(" ");
       
-      // Check if it already starts with an action verb
+      // 1. Improve the opening verb if it's weak or missing
       const startsWithVerb = actionVerbs.some(v => words[0]?.toLowerCase() === v.toLowerCase());
       if (!startsWithVerb) {
         words[0] = randomVerb;
       }
 
-      // Check for quantification
-      const hasNumbers = /\d+/.test(currentText);
-      const quantificationSuffix = hasNumbers ? "" : " resulting in a 20% increase in operational efficiency.";
-
-      // If we have a JD, try to inject a keyword
+      // 2. Contextual Keyword Injection
+      let injectedKeyword = "";
       if (jd) {
-        const jdKeywords = jd.toLowerCase().match(/\b(\w{5,})\b/g) || [];
-        const uniqueKeywords = Array.from(new Set(jdKeywords)).filter(w => !currentText.toLowerCase().includes(w));
+        // Extract potential keywords (5+ chars) from JD
+        const jdKeywords = Array.from(new Set(jd.toLowerCase().match(/\b(\w{5,})\b/g) || []));
         
-        if (uniqueKeywords.length > 0) {
-          const keyword = uniqueKeywords[Math.floor(Math.random() * uniqueKeywords.length)];
-          suggestion = `${words.join(" ")} by leveraging ${keyword}${quantificationSuffix}`;
-        } else {
-          suggestion = `${words.join(" ")}${quantificationSuffix}`;
+        // Get all text currently in the resume to find what's truly "missing"
+        const fullResumeText = JSON.stringify(resume).toLowerCase();
+        
+        // Filter for keywords in JD that are NOT in the resume
+        const missingKeywords = jdKeywords.filter(word => !fullResumeText.includes(word));
+        
+        if (missingKeywords.length > 0) {
+          // Pick a relevant missing keyword
+          injectedKeyword = missingKeywords[Math.floor(Math.random() * missingKeywords.length)];
         }
+      }
+
+      // 3. Quantification check
+      const hasNumbers = /\d+/.test(currentText);
+      const quantification = hasNumbers ? "" : " resulting in a 15% improvement in system throughput";
+
+      // 4. Construct the final suggestion
+      const baseText = words.join(" ");
+      
+      if (injectedKeyword) {
+        // Contextually inject the missing keyword
+        suggestion = `${baseText} utilizing ${injectedKeyword}${quantification}.`;
       } else {
-        suggestion = `${words.join(" ")}${quantificationSuffix}`;
+        suggestion = `${baseText}${quantification}.`;
       }
       
       onOptimize(suggestion);
       setIsOptimizing(false);
-    }, 1000);
+    }, 800);
   };
 
   return (
