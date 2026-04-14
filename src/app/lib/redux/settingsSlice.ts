@@ -8,6 +8,7 @@ export interface Settings {
   documentSize: string;
   margins: string; // in pt
   lineHeight: string;
+  openAIApiKey: string;
   formToShow: {
     workExperiences: boolean;
     educations: boolean;
@@ -50,6 +51,7 @@ export const initialSettings: Settings = {
   documentSize: "Letter",
   margins: "40",
   lineHeight: "1.3",
+  openAIApiKey: "",
   formToShow: {
     workExperiences: true,
     educations: true,
@@ -142,6 +144,7 @@ export const {
 
 export const selectSettings = (state: RootState) => state.settings;
 export const selectThemeColor = (state: RootState) => state.settings.themeColor;
+export const selectOpenAIApiKey = (state: RootState) => state.settings.openAIApiKey;
 
 export const selectFormToShow = (state: RootState) => state.settings.formToShow;
 export const selectShowByForm = (form: ShowForm) => (state: RootState) =>

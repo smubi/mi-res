@@ -93,7 +93,7 @@ export const resumeSlice = createSlice({
     ) => {
       const { idx, field, value } = action.payload;
       const workExperience = draft.workExperiences[idx];
-      workExperience[field] = value as any;
+      (workExperience as any)[field] = value;
     },
     changeEducations: (
       draft,
@@ -101,7 +101,7 @@ export const resumeSlice = createSlice({
     ) => {
       const { idx, field, value } = action.payload;
       const education = draft.educations[idx];
-      education[field] = value as any;
+      (education as any)[field] = value;
     },
     changeProjects: (
       draft,
@@ -109,7 +109,7 @@ export const resumeSlice = createSlice({
     ) => {
       const { idx, field, value } = action.payload;
       const project = draft.projects[idx];
-      project[field] = value as any;
+      (project as any)[field] = value;
     },
     changeSkills: (
       draft,
@@ -200,6 +200,15 @@ export const resumeSlice = createSlice({
         draft[form].splice(idx, 1);
       }
     },
+    changeSectionVisibility: (
+      draft,
+      action: PayloadAction<{ form: ShowForm; idx: number; isHidden: boolean }>
+    ) => {
+      const { form, idx, isHidden } = action.payload;
+      if (form !== "skills" && form !== "custom") {
+        draft[form][idx].isHidden = isHidden;
+      }
+    },
     setResume: (draft, action: PayloadAction<Resume>) => {
       return action.payload;
     },
@@ -217,6 +226,7 @@ export const {
   addSectionInForm,
   moveSectionInForm,
   deleteSectionInFormByIdx,
+  changeSectionVisibility,
   setResume,
 } = resumeSlice.actions;
 

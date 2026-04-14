@@ -20,7 +20,7 @@ export const WorkExperiencesForm = () => {
 
   return (
     <Form form="workExperiences" addButtonText="Add Job">
-      {workExperiences.map(({ company, jobTitle, date, descriptions }, idx) => {
+      {workExperiences.map(({ company, jobTitle, date, descriptions, isHidden }, idx) => {
         const handleWorkExperienceChange = (
           ...[
             field,
@@ -53,6 +53,7 @@ export const WorkExperiencesForm = () => {
             showMoveDown={showMoveDown}
             showDelete={showDelete}
             deleteButtonTooltipText="Delete job"
+            isHidden={isHidden}
           >
             <Input
               label="Company"

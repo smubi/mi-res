@@ -2,9 +2,10 @@
 
 import { SparklesIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
-import { useAppSelector } from "lib/redux/hooks";
+import { useAppSelector, useAppDispatch } from "lib/redux/hooks";
 import { selectJobDescription } from "lib/redux/aiSlice";
 import { selectResume } from "lib/redux/resumeSlice";
+import { selectOpenAIApiKey, changeSettings } from "lib/redux/settingsSlice";
 
 interface AIOptimizerProps {
   onOptimize: (suggestion: string) => void;
@@ -13,64 +14,96 @@ interface AIOptimizerProps {
 
 export const AIOptimizer = ({ onOptimize, currentText }: AIOptimizerProps) => {
   const [isOptimizing, setIsOptimizing] = useState(false);
+  const [showKeyInput, setShowKeyInput] = useState(false);
+  const [tempKey, setTempKey] = useState("");
+  
   const jd = useAppSelector(selectJobDescription);
   const resume = useAppSelector(selectResume);
+  const openAIApiKey = useAppSelector(selectOpenAIApiKey);
+  const dispatch = useAppDispatch();
 
-  const handleOptimize = () => {
+  const handleSaveKey = () => {
+    if (tempKey.startsWith("sk-")) {
+      dispatch(changeSettings({ field: "openAIApiKey", value: tempKey }));
+      setShowKeyInput(false);
+    } else {
+      alert("Please enter a valid OpenAI API Key starting with 'sk-'");
+    }
+  };
+
+  const handleOptimize = async () => {
     if (!currentText || isOptimizing) return;
+    
+    if (!openAIApiKey) {
+      setShowKeyInput(true);
+      return;
+    }
     
     setIsOptimizing(true);
     
-    // Simulate AI processing with context
-    setTimeout(() => {
-      const actionVerbs = ["Spearheaded", "Architected", "Orchestrated", "Optimized", "Leveraged", "Engineered", "Pioneered", "Catalyzed", "Streamlined", "Augmented"];
-      const randomVerb = actionVerbs[Math.floor(Math.random() * actionVerbs.length)];
-      
-      let suggestion = "";
-      const words = currentText.trim().split(" ");
-      
-      // 1. Improve the opening verb if it's weak or missing
-      const startsWithVerb = actionVerbs.some(v => words[0]?.toLowerCase() === v.toLowerCase());
-      if (!startsWithVerb) {
-        words[0] = randomVerb;
+    try {
+      const response = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${openAIApiKey}`,
+        },
+        body: JSON.stringify({
+          model: "gpt-3.5-turbo",
+          messages: [
+            {
+              role: "system",
+              content: "You are an expert resume writer. Rewrite the user's bullet point to be extremely professional, action-oriented, and quantified. Keep it to one single bullet point sentence. Do not add introductory text."
+            },
+            {
+              role: "user",
+              content: `Original bullet point: "${currentText}"\n\nTarget Job Description elements (incorporate if relevant): "${jd || 'None'}"\n\nResume Context: "${JSON.stringify(resume.profile)}"`
+            }
+          ]
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error("API Request Failed");
       }
 
-      // 2. Contextual Keyword Injection
-      let injectedKeyword = "";
-      if (jd) {
-        // Extract potential keywords (5+ chars) from JD
-        const jdKeywords = Array.from(new Set(jd.toLowerCase().match(/\b(\w{5,})\b/g) || []));
-        
-        // Get all text currently in the resume to find what's truly "missing"
-        const fullResumeText = JSON.stringify(resume).toLowerCase();
-        
-        // Filter for keywords in JD that are NOT in the resume
-        const missingKeywords = jdKeywords.filter(word => !fullResumeText.includes(word));
-        
-        if (missingKeywords.length > 0) {
-          // Pick a relevant missing keyword
-          injectedKeyword = missingKeywords[Math.floor(Math.random() * missingKeywords.length)];
-        }
-      }
-
-      // 3. Quantification check
-      const hasNumbers = /\d+/.test(currentText);
-      const quantification = hasNumbers ? "" : " resulting in a 15% improvement in system throughput";
-
-      // 4. Construct the final suggestion
-      const baseText = words.join(" ");
-      
-      if (injectedKeyword) {
-        // Contextually inject the missing keyword
-        suggestion = `${baseText} utilizing ${injectedKeyword}${quantification}.`;
-      } else {
-        suggestion = `${baseText}${quantification}.`;
-      }
-      
+      const data = await response.json();
+      const suggestion = data.choices[0].message.content.replace(/^[-•]\s*/, "").trim();
       onOptimize(suggestion);
+    } catch (e) {
+      alert("Failed to optimize. Please check your API key or internet connection.");
+    } finally {
       setIsOptimizing(false);
-    }, 800);
+    }
   };
+
+  if (showKeyInput) {
+    return (
+      <div className="flex gap-2 items-center">
+        <input 
+          type="password"
+          placeholder="sk-..."
+          value={tempKey}
+          onChange={(e) => setTempKey(e.target.value)}
+          className="border-b border-gray-300 px-1 py-0.5 text-xs text-gray-700 outline-none focus:border-sky-500 w-24"
+        />
+        <button 
+          type="button" 
+          onClick={handleSaveKey}
+          className="rounded bg-sky-500 px-2 py-0.5 text-[10px] font-bold text-white hover:bg-sky-600"
+        >
+          Save
+        </button>
+        <button 
+          type="button" 
+          onClick={() => setShowKeyInput(false)}
+          className="text-[10px] text-gray-500 hover:underline"
+        >
+          Cancel
+        </button>
+      </div>
+    );
+  }
 
   return (
     <button
