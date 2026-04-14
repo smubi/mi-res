@@ -31,6 +31,7 @@ import { ScoreBreakdown } from "./ScoreBreakdown";
 import { KeywordDensity } from "./KeywordDensity";
 import { ToneStyleChecker } from "./ToneStyleChecker";
 import { NetworkingAssistant } from "./NetworkingAssistant";
+import { HealthDashboard } from "./HealthDashboard";
 import { FlexboxSpacer } from "components/FlexboxSpacer";
 import { FormTabs, TabType } from "./FormTabs";
 import { Accordion, AccordionItem } from "./Form/Accordion";
@@ -91,32 +92,36 @@ export const ResumeForm = () => {
           )}
 
           {activeTab === "optimize" && (
-            <Accordion>
-              <AccordionItem title="Resume Analysis">
-                <div className="flex flex-col gap-6">
-                  <LiveGrader />
-                  <ScoreBreakdown />
-                  <ToneStyleChecker />
-                  <ResumeChecklist />
-                </div>
-              </AccordionItem>
-              <AccordionItem title="Job Matching">
-                <div className="flex flex-col gap-6">
-                  <JobDescriptionForm />
-                  <JDAnalyzer />
-                  <KeywordDensity />
-                  <ResumeAnalysis />
-                </div>
-              </AccordionItem>
-              <AccordionItem title="Content Improvement">
-                <div className="flex flex-col gap-6">
-                  <QuantificationNudge />
-                  <SkillSuggestions />
-                  <VerbLibrary />
-                  <SmartSuggestions />
-                </div>
-              </AccordionItem>
-            </Accordion>
+            <div className="flex flex-col gap-8">
+              <HealthDashboard />
+              
+              <Accordion>
+                <AccordionItem title="Resume Analysis">
+                  <div className="flex flex-col gap-6">
+                    <LiveGrader />
+                    <ScoreBreakdown />
+                    <ToneStyleChecker />
+                    <ResumeChecklist />
+                  </div>
+                </AccordionItem>
+                <AccordionItem title="Job Matching">
+                  <div className="flex flex-col gap-6">
+                    <JobDescriptionForm />
+                    <JDAnalyzer />
+                    <KeywordDensity />
+                    <ResumeAnalysis />
+                  </div>
+                </AccordionItem>
+                <AccordionItem title="Content Improvement">
+                  <div className="flex flex-col gap-6">
+                    <QuantificationNudge />
+                    <SkillSuggestions />
+                    <VerbLibrary />
+                    <SmartSuggestions />
+                  </div>
+                </AccordionItem>
+              </Accordion>
+            </div>
           )}
 
           {activeTab === "design" && (
