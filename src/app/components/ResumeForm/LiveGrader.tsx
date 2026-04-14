@@ -2,12 +2,14 @@
 
 import { useAppSelector } from "lib/redux/hooks";
 import { selectResume } from "lib/redux/resumeSlice";
+import { selectJobDescription } from "lib/redux/aiSlice";
 import { useMemo } from "react";
 import { 
   TrophyIcon, 
   ExclamationTriangleIcon, 
   CheckCircleIcon,
-  ArrowTrendingUpIcon
+  ArrowTrendingUpIcon,
+  SparklesIcon
 } from "@heroicons/react/24/outline";
 import { cx } from "lib/cx";
 
@@ -21,20 +23,20 @@ const ACTION_VERBS = new Set([
 
 export const LiveGrader = () => {
   const resume = useAppSelector(selectResume);
+  const jd = useAppSelector(selectJobDescription);
 
   const analysis = useMemo(() => {
     let score = 0;
     const deductions = [];
     const bonuses = [];
 
-    // 1. Profile (Max 20)
+    // 1. Profile (Max 15)
     if (resume.profile.name) score += 5;
     if (resume.profile.email) score += 5;
     if (resume.profile.phone) score += 5;
-    if (resume.profile.summary.length > 50) score += 5;
-    else deductions.push("Professional summary is too short or missing.");
+    if (resume.profile.summary.length < 50) deductions.push("Professional summary is too short or missing.");
 
-    // 2. Experience & Projects (Max 40)
+    // 2. Experience & Projects (Max 35)
     const allBullets = [
       ...resume.workExperiences.flatMap(w => w.descriptions),
       ...resume.projects.flatMap(p => p.descriptions)
@@ -43,7 +45,7 @@ export const LiveGrader = () => {
     if (allBullets.length === 0) {
       deductions.push("No experience or project descriptions found.");
     } else {
-      score += 10; // Base points for having content
+      score += 5; // Base points for having content
 
       // Bullet Length Check
       const shortBullets = allBullets.filter(b => b.length < 40);
@@ -82,23 +84,36 @@ export const LiveGrader = () => {
       }
     }
 
-    // 3. Education (Max 20)
-    if (resume.educations.length > 0 && resume.educations[0].school) {
-      score += 20;
-    } else {
-      deductions.push("Education section is incomplete.");
-    }
-
-    // 4. Skills (Max 20)
+    // 3. Education & Skills (Max 20)
+    if (resume.educations.length > 0 && resume.educations[0].school) score += 10;
     const hasSkills = resume.skills.descriptions.length > 0 || resume.skills.featuredSkills.some(s => s.skill);
-    if (hasSkills) {
-      score += 20;
+    if (hasSkills) score += 10;
+
+    // 4. Job Description Matching (Max 30) - NEW
+    if (jd) {
+      const stopWords = new Set(["with", "from", "that", "this", "their", "they", "will", "have", "using", "work", "team"]);
+      const jdWords = Array.from(new Set(jd.toLowerCase().match(/\b(\w{4,})\b/g) || []))
+        .filter(word => !stopWords.has(word));
+
+      const resumeText = JSON.stringify(resume).toLowerCase();
+      const matches = jdWords.filter(word => resumeText.includes(word));
+      const matchRatio = jdWords.length > 0 ? matches.length / jdWords.length : 0;
+      
+      const jdScore = Math.round(matchRatio * 30);
+      score += jdScore;
+
+      if (matchRatio < 0.5) {
+        deductions.push(`Low keyword match with Job Description (${Math.round(matchRatio * 100)}%).`);
+      } else if (matchRatio > 0.8) {
+        bonuses.push("Highly tailored to the target job description!");
+      }
     } else {
-      deductions.push("Skills section is empty.");
+      // If no JD, we cap the score or provide a nudge
+      deductions.push("Add a Job Description to see your tailoring score (worth up to 30 points).");
     }
 
-    return { score: Math.min(100, score), deductions, bonuses };
-  }, [resume]);
+    return { score: Math.min(100, score), deductions, bonuses, hasJD: !!jd };
+  }, [resume, jd]);
 
   return (
     <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm mb-6">
@@ -136,7 +151,11 @@ export const LiveGrader = () => {
             />
           </svg>
           <div className="absolute inset-0 flex items-center justify-center">
-            <ArrowTrendingUpIcon className="h-5 w-5 text-gray-300" />
+            {analysis.hasJD ? (
+              <SparklesIcon className="h-5 w-5 text-purple-400 animate-pulse" />
+            ) : (
+              <ArrowTrendingUpIcon className="h-5 w-5 text-gray-300" />
+            )}
           </div>
         </div>
       </div>
