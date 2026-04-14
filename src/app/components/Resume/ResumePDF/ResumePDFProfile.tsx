@@ -15,29 +15,46 @@ export const ResumePDFProfile = ({
   profile,
   themeColor,
   isPDF,
+  templateId = "modern",
 }: {
   profile: ResumeProfile;
   themeColor: string;
   isPDF: boolean;
+  templateId?: string;
 }) => {
   const { name, email, phone, url, summary, location } = profile;
   const iconProps = { email, phone, location, url };
 
+  const isClassic = templateId === "classic";
+  const isMinimal = templateId === "minimal";
+
   return (
-    <ResumePDFSection style={{ marginTop: spacing["4"] }}>
+    <ResumePDFSection style={{
+      marginTop: spacing["4"],
+      alignItems: isClassic ? "center" : "flex-start"
+    }}>
       <ResumePDFText
         bold={true}
         themeColor={themeColor}
-        style={{ fontSize: "20pt" }}
+        style={{ fontSize: isMinimal ? "18pt" : "20pt" }}
       >
         {name}
       </ResumePDFText>
-      {summary && <ResumePDFText>{summary}</ResumePDFText>}
+      {summary && (
+        <ResumePDFText style={{
+          textAlign: isClassic ? "center" : "left",
+          marginTop: spacing["1"]
+        }}>
+          {summary}
+        </ResumePDFText>
+      )}
       <View
         style={{
-          ...styles.flexRowBetween,
+          ...styles.flexRow,
+          justifyContent: isClassic ? "center" : "flex-start",
           flexWrap: "wrap",
-          marginTop: spacing["0.5"],
+          marginTop: spacing["1"],
+          gap: spacing["3"],
         }}
       >
         {Object.entries(iconProps).map(([key, value]) => {
@@ -92,7 +109,7 @@ export const ResumePDFProfile = ({
                 gap: spacing["1"],
               }}
             >
-              <ResumePDFIcon type={iconType} isPDF={isPDF} />
+              {!isClassic && <ResumePDFIcon type={iconType} isPDF={isPDF} />}
               <Wrapper>
                 <ResumePDFText>{value}</ResumePDFText>
               </Wrapper>

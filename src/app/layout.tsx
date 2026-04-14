@@ -1,5 +1,6 @@
 import "globals.css";
 import { TopNavBar } from "components/TopNavBar";
+import { AppProvider } from "components/AppProvider";
 
 export const metadata = {
   title: "OpenResume - Free Open-source Resume Builder and Parser",
@@ -15,8 +16,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <TopNavBar />
-        {children}
+        <AppProvider>
+          <TopNavBar />
+          {children}
+        </AppProvider>
       </body>
     </html>
   );

@@ -41,7 +41,7 @@ export const BaseForm = ({
   className?: string;
 }) => (
   <section
-    className={`flex flex-col gap-3 rounded-md bg-white p-6 pt-4 shadow transition-opacity duration-200 ${className}`}
+    className={`flex flex-col gap-3 rounded-md bg-white p-6 pt-4 shadow transition-all duration-200 dark:bg-gray-800 dark:shadow-none ${className}`}
   >
     {children}
   </section>
@@ -86,16 +86,16 @@ export const Form = ({
 
   return (
     <BaseForm
-      className={`transition-opacity duration-200 ${
+      className={`transition-all duration-200 ${
         showForm ? "pb-6" : "pb-2 opacity-60"
       }`}
     >
       <div className="flex items-center justify-between gap-4">
         <div className="flex grow items-center gap-2">
-          <Icon className="h-6 w-6 text-gray-600" aria-hidden="true" />
+          <Icon className="h-6 w-6 text-gray-600 dark:text-gray-400" aria-hidden="true" />
           <input
             type="text"
-            className="block w-full border-b border-transparent text-lg font-semibold tracking-wide text-gray-900 outline-none hover:border-gray-300 hover:shadow-sm focus:border-gray-300 focus:shadow-sm"
+            className="block w-full border-b border-transparent bg-transparent text-lg font-semibold tracking-wide text-gray-900 outline-none hover:border-gray-300 hover:shadow-sm focus:border-gray-300 focus:shadow-sm dark:text-gray-100 dark:hover:border-gray-600 dark:focus:border-gray-600"
             value={heading}
             onChange={(e) => setHeading(e.target.value)}
           />
@@ -120,7 +120,7 @@ export const Form = ({
             onClick={() => {
               dispatch(addSectionInForm({ form }));
             }}
-            className="flex items-center rounded-md bg-white py-2 pl-3 pr-4 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+            className="flex items-center rounded-md bg-white py-2 pl-3 pr-4 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-gray-700 dark:text-gray-100 dark:ring-gray-600 dark:hover:bg-gray-600"
           >
             <PlusSmallIcon
               className="-ml-0.5 mr-1.5 h-5 w-5 text-gray-400"
@@ -167,7 +167,7 @@ export const FormSection = ({
   return (
     <>
       {idx !== 0 && (
-        <div className="mb-4 mt-6 border-t-2 border-dotted border-gray-200" />
+        <div className="mb-4 mt-6 border-t-2 border-dotted border-gray-200 dark:border-gray-700" />
       )}
       <div className="relative grid grid-cols-6 gap-3">
         {children}

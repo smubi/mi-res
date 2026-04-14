@@ -33,6 +33,7 @@ export const ResumePDF = ({
     showBulletPoints,
     margins = "40",
     lineHeight = "1.3",
+    templateId = "modern",
   } = settings;
   const themeColor = settings.themeColor || DEFAULT_FONT_COLOR;
 
@@ -92,7 +93,7 @@ export const ResumePDF = ({
             lineHeight: lineHeight,
           }}
         >
-          {Boolean(settings.themeColor) && (
+          {templateId === "modern" && Boolean(settings.themeColor) && (
             <View
               style={{
                 width: spacing["full"],
@@ -111,6 +112,7 @@ export const ResumePDF = ({
               profile={profile}
               themeColor={themeColor}
               isPDF={isPDF}
+              templateId={templateId}
             />
             {showFormsOrder.map((form) => {
               const Component = formTypeToComponent[form];
