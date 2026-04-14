@@ -236,10 +236,11 @@ export const Resume = () => {
               scale={scale}
               setScale={setScale}
               documentSize={settings.documentSize}
-              document={document}
+              resumePDFDocument={document}
               fileName={fileName}
             />
           )}
+
         </div>
         <ResumeControlBarBorder />
       </div>

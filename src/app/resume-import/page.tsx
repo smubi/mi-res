@@ -2,6 +2,7 @@
 import { getHasUsedAppBefore } from "lib/redux/local-storage";
 import { ResumeDropzone } from "components/ResumeDropzone";
 import { ResumePasteInput } from "components/ResumePasteInput";
+import { JSONResumeImport } from "components/JSONResumeImport";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 
@@ -33,7 +34,10 @@ export default function ImportResume() {
                 <OrDivider />
                 <ResumePasteInput />
                 <OrDivider />
+                <JSONResumeImport />
+                <OrDivider />
                 <SectionWithHeadingAndCreateButton
+
                   heading="Don't have a resume yet?"
                   buttonText="Create from scratch"
                 />
@@ -62,8 +66,11 @@ export default function ImportResume() {
               <>
                 <OrDivider />
                 <ResumePasteInput />
+                <OrDivider />
+                <JSONResumeImport />
               </>
             )}
+
           </>
         )}
 

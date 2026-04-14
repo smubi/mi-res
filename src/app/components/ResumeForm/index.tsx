@@ -43,7 +43,9 @@ import { ResumeProgressChart } from "./ResumeProgressChart";
 import { EmploymentGapFramer } from "./EmploymentGapFramer";
 import { STARMethodAnalyzer } from "./STARMethodAnalyzer";
 import { ATSMatchModal } from "./ATSMatchModal";
+import { JSONResumeSection } from "./JSONResumeSection";
 import { FlexboxSpacer } from "components/FlexboxSpacer";
+
 import { FormTabs, TabType } from "./FormTabs";
 import { Accordion, AccordionItem } from "./Form/Accordion";
 import { cx } from "lib/cx";
@@ -157,8 +159,15 @@ export const ResumeForm = () => {
               <ThemeForm />
               <div className="border-t border-gray-100 pt-8 dark:border-gray-800">
                 <h3 className="mb-6 text-sm font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500">
+                  Data Management
+                </h3>
+                <JSONResumeSection />
+              </div>
+              <div className="border-t border-gray-100 pt-8 dark:border-gray-800">
+                <h3 className="mb-6 text-sm font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500">
                   Version Control
                 </h3>
+
                 <div className="flex flex-col gap-6">
                   <ResumeProgressChart />
                   <ResumeSnapshots />

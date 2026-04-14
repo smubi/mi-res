@@ -4,21 +4,25 @@ import { useSetDefaultScale } from "components/Resume/hooks";
 import {
   Search,
   Download,
+  FileJson,
 } from "lucide-react";
 import { usePDF } from "@react-pdf/renderer";
 import dynamic from "next/dynamic";
+import { useAppSelector } from "lib/redux/hooks";
+import { selectResume } from "lib/redux/resumeSlice";
+import { mapResumeToJsonResume } from "lib/json-resume";
 
 const ResumeControlBar = ({
   scale,
   setScale,
   documentSize,
-  document,
+  resumePDFDocument,
   fileName,
 }: {
   scale: number;
   setScale: (scale: number) => void;
   documentSize: string;
-  document: JSX.Element;
+  resumePDFDocument: JSX.Element;
   fileName: string;
 }) => {
   const { scaleOnResize, setScaleOnResize } = useSetDefaultScale({
@@ -26,12 +30,29 @@ const ResumeControlBar = ({
     documentSize,
   });
 
-  const [instance, update] = usePDF({ document });
+  const [instance, update] = usePDF({ document: resumePDFDocument });
 
   // Hook to update pdf when document changes
   useEffect(() => {
-    update(document);
-  }, [update, document]);
+    update(resumePDFDocument);
+  }, [update, resumePDFDocument]);
+
+  const resume = useAppSelector(selectResume);
+
+  const handleJSONExport = () => {
+    const jsonResume = mapResumeToJsonResume(resume);
+    const blob = new Blob([JSON.stringify(jsonResume, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = fileName.replace(".pdf", ".json");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <div className="sticky bottom-0 left-0 right-0 flex h-[var(--resume-control-bar-height)] items-center justify-center bg-white/90 px-[var(--resume-padding)] text-slate-600 backdrop-blur-md dark:bg-slate-900/90 dark:text-slate-400 lg:justify-between border-t border-slate-200 dark:border-slate-800">
@@ -62,14 +83,23 @@ const ResumeControlBar = ({
           <span className="select-none text-sm font-medium">Autoscale</span>
         </label>
       </div>
-      <a
-        className="flex items-center gap-2 rounded-full bg-indigo-600 px-6 py-2 text-sm font-bold text-white shadow-lg shadow-indigo-200 transition-all hover:bg-indigo-700 dark:shadow-none"
-        href={instance.url!}
-        download={fileName}
-      >
-        <Download size={16} />
-        <span className="whitespace-nowrap">Download PDF</span>
-      </a>
+      <div className="flex items-center gap-3">
+        <button
+          onClick={handleJSONExport}
+          className="flex items-center gap-2 rounded-full bg-slate-100 px-6 py-2 text-sm font-bold text-slate-700 transition-all hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+        >
+          <FileJson size={16} />
+          <span className="whitespace-nowrap">JSON</span>
+        </button>
+        <a
+          className="flex items-center gap-2 rounded-full bg-indigo-600 px-6 py-2 text-sm font-bold text-white shadow-lg shadow-indigo-200 transition-all hover:bg-indigo-700 dark:shadow-none"
+          href={instance.url!}
+          download={fileName}
+        >
+          <Download size={16} />
+          <span className="whitespace-nowrap">Download PDF</span>
+        </a>
+      </div>
     </div>
   );
 };
