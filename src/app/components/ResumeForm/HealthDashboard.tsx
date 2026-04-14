@@ -3,6 +3,7 @@
 import { useAppSelector } from "lib/redux/hooks";
 import { selectResume } from "lib/redux/resumeSlice";
 import { selectJobDescription } from "lib/redux/aiSlice";
+import { selectSettings } from "lib/redux/settingsSlice";
 import { useMemo } from "react";
 import { 
   TrophyIcon, 
@@ -10,19 +11,21 @@ import {
   CheckCircleIcon,
   ArrowTrendingUpIcon,
   SparklesIcon,
-  BoltIcon
+  BoltIcon,
+  EyeIcon
 } from "@heroicons/react/24/outline";
 import { cx } from "lib/cx";
 
 export const HealthDashboard = () => {
   const resume = useAppSelector(selectResume);
   const jd = useAppSelector(selectJobDescription);
+  const settings = useAppSelector(selectSettings);
 
   const stats = useMemo(() => {
-    // Simple score calculation logic (reused from LiveGrader)
-    let score = 0;
-    if (resume.profile.name) score += 5;
-    if (resume.profile.email) score += 5;
+    // 1. Content Score
+    let contentScore = 0;
+    if (resume.profile.name) contentScore += 10;
+    if (resume.profile.email) contentScore += 10;
     
     const allBullets = [
       ...resume.workExperiences.flatMap(w => w.descriptions),
@@ -32,35 +35,46 @@ export const HealthDashboard = () => {
     const metricsCount = allBullets.filter(b => /\d+%|\d+\s?percent|\$\d+|\d+\+/.test(b)).length;
     const metricsRatio = allBullets.length > 0 ? metricsCount / allBullets.length : 0;
     
-    score += Math.min(40, allBullets.length * 4);
-    score += Math.round(metricsRatio * 20);
+    contentScore += Math.min(40, allBullets.length * 4);
+    contentScore += Math.round(metricsRatio * 20);
 
+    // 2. Scannability Score (from RecruiterInsights logic)
+    const scannabilityChecks = [
+      !!(resume.profile.name && resume.profile.email),
+      resume.workExperiences.length > 0 && !!resume.workExperiences[0].jobTitle,
+      resume.workExperiences.every(w => /\d{4}/.test(w.date)),
+      resume.educations.length > 0,
+      settings.formToHeading.workExperiences === settings.formToHeading.workExperiences.toUpperCase(),
+      resume.workExperiences.every(w => w.descriptions.length <= 6)
+    ];
+    const scannabilityScore = Math.round((scannabilityChecks.filter(Boolean).length / scannabilityChecks.length) * 100);
+
+    // 3. Match Score
     let matchScore = 0;
     if (jd) {
       const jdWords = Array.from(new Set(jd.toLowerCase().match(/\b(\w{4,})\b/g) || []));
       const resumeText = JSON.stringify(resume).toLowerCase();
       const matches = jdWords.filter(word => resumeText.includes(word));
       matchScore = jdWords.length > 0 ? Math.round((matches.length / jdWords.length) * 100) : 0;
-      score += Math.round(matchScore * 0.3);
     }
 
-    const finalScore = Math.min(100, score);
+    const finalScore = Math.round((contentScore * 0.4) + (scannabilityScore * 0.3) + (matchScore * 0.3));
 
     // Identify top 3 issues
     const issues = [];
     if (allBullets.length < 5) issues.push("Add more bullet points to your experience.");
     if (metricsRatio < 0.3) issues.push("Quantify your impact with more numbers (%, $, #).");
+    if (scannabilityScore < 80) issues.push("Improve scannability (check the Insights panel).");
     if (jd && matchScore < 50) issues.push("Tailor your keywords to match the job description.");
-    if (!resume.profile.summary) issues.push("Add a professional summary to your profile.");
 
     return { 
-      score: finalScore, 
+      score: Math.min(100, finalScore), 
+      scannabilityScore,
       matchScore, 
-      metricsCount, 
       issues: issues.slice(0, 3),
       isHealthy: finalScore > 80
     };
-  }, [resume, jd]);
+  }, [resume, jd, settings]);
 
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -74,14 +88,27 @@ export const HealthDashboard = () => {
             {stats.score}
           </div>
         </div>
-        <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Overall Score</span>
+        <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Overall Health</span>
       </div>
 
       <div className="col-span-2 flex flex-col justify-between rounded-2xl border border-purple-100 bg-purple-50/30 p-6 dark:border-purple-900/20 dark:bg-purple-900/5">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <BoltIcon className="h-5 w-5 text-purple-500" />
-            <h3 className="text-sm font-bold text-purple-900 dark:text-purple-300">Critical Improvements</h3>
+          <div className="flex items-center gap-4">
+            <div className="flex flex-col">
+              <div className="flex items-center gap-1.5">
+                <EyeIcon className="h-3.5 w-3.5 text-orange-500" />
+                <span className="text-[10px] font-bold uppercase text-gray-400">Scannability</span>
+              </div>
+              <span className="text-sm font-black text-gray-900 dark:text-white">{stats.scannabilityScore}%</span>
+            </div>
+            <div className="h-8 w-px bg-purple-100 dark:bg-purple-900/50" />
+            <div className="flex flex-col">
+              <div className="flex items-center gap-1.5">
+                <SparklesIcon className="h-3.5 w-3.5 text-purple-500" />
+                <span className="text-[10px] font-bold uppercase text-gray-400">JD Match</span>
+              </div>
+              <span className="text-sm font-black text-gray-900 dark:text-white">{stats.matchScore}%</span>
+            </div>
           </div>
           {stats.isHealthy && (
             <span className="flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-bold text-green-700 dark:bg-green-900/20 dark:text-green-400">
