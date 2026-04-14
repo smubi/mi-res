@@ -20,6 +20,7 @@ import { NonEnglishFontsCSSLazyLoader } from "components/fonts/NonEnglishFontsCS
 import { ATSScoreBadge } from "components/Resume/ATSScoreBadge";
 import { ATSView } from "components/Resume/ATSView";
 import { EyeIcon, CommandLineIcon } from "@heroicons/react/24/outline";
+import { cx } from "lib/cx";
 
 export const Resume = () => {
   const [scale, setScale] = useState(0.8);
@@ -44,20 +45,30 @@ export const Resume = () => {
   return (
     <>
       <NonEnglishFontsCSSLazyLoader />
-      <div className="relative flex justify-center md:justify-start">
+      <div className="relative flex justify-center md:justify-start dark:bg-gray-900 transition-colors duration-300">
         <FlexboxSpacer maxWidth={50} className="hidden md:block" />
         <div className="relative w-full max-w-[850px]">
           <div className="absolute -left-12 top-4 z-30 hidden flex-col gap-2 md:flex">
             <button 
               onClick={() => setViewMode("pdf")}
-              className={`flex h-10 w-10 items-center justify-center rounded-xl border shadow-sm transition-all ${viewMode === 'pdf' ? 'bg-white text-sky-500 border-sky-100 ring-2 ring-sky-50' : 'bg-white text-gray-400 border-gray-100 hover:text-gray-600'}`}
+              className={cx(
+                "flex h-10 w-10 items-center justify-center rounded-xl border shadow-sm transition-all",
+                viewMode === 'pdf' 
+                  ? 'bg-white text-sky-500 border-sky-100 ring-2 ring-sky-50 dark:bg-gray-800 dark:border-sky-900 dark:ring-sky-900/20' 
+                  : 'bg-white text-gray-400 border-gray-100 hover:text-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-500 dark:hover:text-gray-300'
+              )}
               title="PDF Preview"
             >
               <EyeIcon className="h-5 w-5" />
             </button>
             <button 
               onClick={() => setViewMode("ats")}
-              className={`flex h-10 w-10 items-center justify-center rounded-xl border shadow-sm transition-all ${viewMode === 'ats' ? 'bg-gray-900 text-green-400 border-gray-800 ring-2 ring-gray-800' : 'bg-white text-gray-400 border-gray-100 hover:text-gray-600'}`}
+              className={cx(
+                "flex h-10 w-10 items-center justify-center rounded-xl border shadow-sm transition-all",
+                viewMode === 'ats' 
+                  ? 'bg-gray-900 text-green-400 border-gray-800 ring-2 ring-gray-800 dark:bg-black dark:border-green-900/30 dark:ring-green-900/10' 
+                  : 'bg-white text-gray-400 border-gray-100 hover:text-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-500 dark:hover:text-gray-300'
+              )}
               title="ATS View"
             >
               <CommandLineIcon className="h-5 w-5" />
@@ -80,7 +91,7 @@ export const Resume = () => {
                 />
               </ResumeIframeCSR>
             ) : (
-              <div className="h-full w-full overflow-hidden rounded-xl border border-gray-200 shadow-2xl">
+              <div className="h-full w-full overflow-hidden rounded-xl border border-gray-200 shadow-2xl dark:border-gray-800">
                 <ATSView />
               </div>
             )}

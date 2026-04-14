@@ -35,22 +35,12 @@ import { FlexboxSpacer } from "components/FlexboxSpacer";
 import { FormTabs, TabType } from "./FormTabs";
 import { cx } from "lib/cx";
 
-import { Accordion, AccordionItem } from "./Form/Accordion";
-
 const formTypeToComponent: { [type in ShowForm]: () => JSX.Element } = {
   workExperiences: WorkExperiencesForm,
   educations: EducationsForm,
   projects: ProjectsForm,
   skills: SkillsForm,
   custom: CustomForm,
-};
-
-const formTypeToTitle: { [type in ShowForm]: string } = {
-  workExperiences: "Work Experience",
-  educations: "Education",
-  projects: "Projects",
-  skills: "Skills",
-  custom: "Custom Section",
 };
 
 export const ResumeForm = () => {
@@ -64,9 +54,12 @@ export const ResumeForm = () => {
   return (
     <div
       className={cx(
-        "flex flex-col scrollbar-thin scrollbar-track-gray-100 md:h-[calc(100vh-var(--top-nav-bar-height))] md:overflow-y-scroll transition-colors",
-        isHover ? "scrollbar-thumb-gray-200" : "scrollbar-thumb-gray-100",
-        "dark:bg-gray-900 dark:scrollbar-track-gray-800 dark:scrollbar-thumb-gray-700"
+        "flex flex-col scrollbar-thin md:h-[calc(100vh-var(--top-nav-bar-height))] md:overflow-y-scroll transition-colors duration-300",
+        "bg-gray-50/50 dark:bg-gray-950",
+        "scrollbar-track-gray-100 dark:scrollbar-track-gray-900",
+        isHover 
+          ? "scrollbar-thumb-gray-200 dark:scrollbar-thumb-gray-800" 
+          : "scrollbar-thumb-gray-100 dark:scrollbar-thumb-gray-900"
       )}
       onMouseOver={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
@@ -74,25 +67,19 @@ export const ResumeForm = () => {
       <FormTabs activeTab={activeTab} onChange={setActiveTab} />
       
       <div className="flex justify-center md:justify-end">
-        <section className="flex w-full max-w-2xl flex-col gap-8 p-[var(--resume-padding)]">
+        <section className="flex w-full max-w-2xl flex-col gap-6 p-[var(--resume-padding)]">
           {activeTab === "content" && (
-            <Accordion>
-              <AccordionItem title="Profile">
-                <ProfileForm />
-              </AccordionItem>
+            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <ProfileForm />
               {formsOrder.map((form) => {
                 const Component = formTypeToComponent[form];
-                return (
-                  <AccordionItem key={form} title={formTypeToTitle[form]}>
-                    <Component />
-                  </AccordionItem>
-                );
+                return <Component key={form} />;
               })}
-            </Accordion>
+            </div>
           )}
 
           {activeTab === "optimize" && (
-            <div className="flex flex-col gap-8">
+            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <LiveGrader />
               <ScoreBreakdown />
               <JobDescriptionForm />
@@ -112,7 +99,7 @@ export const ResumeForm = () => {
           )}
 
           {activeTab === "design" && (
-            <div className="flex flex-col gap-8">
+            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <ThemeForm />
               <ResumeSnapshots />
               <ResumeComparison />
@@ -120,7 +107,7 @@ export const ResumeForm = () => {
             </div>
           )}
           
-          <br />
+          <div className="h-20" />
         </section>
         <FlexboxSpacer maxWidth={50} className="hidden md:block" />
       </div>

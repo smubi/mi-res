@@ -1,4 +1,4 @@
-import { Page, View, Document } from "@react-pdf/renderer";
+import { Page, View, Document, Text } from "@react-pdf/renderer";
 import { styles, spacing } from "components/Resume/ResumePDF/styles";
 import { ResumePDFProfile } from "components/Resume/ResumePDF/ResumePDFProfile";
 import { ResumePDFWorkExperience } from "components/Resume/ResumePDF/ResumePDFWorkExperience";
@@ -93,6 +93,7 @@ export const ResumePDF = ({
             lineHeight: lineHeight,
           }}
         >
+          {/* Modern Template Accent Bar */}
           {templateId === "modern" && Boolean(settings.themeColor) && (
             <View
               style={{
@@ -102,10 +103,12 @@ export const ResumePDF = ({
               }}
             />
           )}
+
           <View
             style={{
               ...styles.flexCol,
               padding: `${spacing[0]} ${margins}pt`,
+              textAlign: templateId === "classic" ? "center" : "left",
             }}
           >
             <ResumePDFProfile
@@ -114,6 +117,7 @@ export const ResumePDF = ({
               isPDF={isPDF}
               templateId={templateId}
             />
+            
             {showFormsOrder.map((form) => {
               const Component = formTypeToComponent[form];
               return <Component key={form} />;

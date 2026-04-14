@@ -21,6 +21,7 @@ import {
   LightBulbIcon,
   WrenchIcon,
   PlusSmallIcon,
+  ChevronDownIcon,
 } from "@heroicons/react/24/outline";
 import {
   addSectionInForm,
@@ -28,6 +29,7 @@ import {
   moveSectionInForm,
   changeSectionVisibility,
 } from "lib/redux/resumeSlice";
+import { cx } from "lib/cx";
 
 /**
  * BaseForm is the bare bone form, i.e. just the outline with no title and no control buttons.
@@ -41,7 +43,10 @@ export const BaseForm = ({
   className?: string;
 }) => (
   <section
-    className={`flex flex-col gap-3 rounded-md bg-white p-6 pt-4 shadow transition-all duration-200 dark:bg-gray-800 dark:shadow-none ${className}`}
+    className={cx(
+      "flex flex-col gap-3 rounded-xl bg-white p-6 pt-4 shadow-sm border border-gray-100 transition-all duration-200 dark:bg-gray-800 dark:border-gray-700 dark:shadow-none",
+      className
+    )}
   >
     {children}
   </section>
@@ -86,44 +91,59 @@ export const Form = ({
 
   return (
     <BaseForm
-      className={`transition-all duration-200 ${
-        showForm ? "pb-6" : "pb-2 opacity-60"
-      }`}
+      className={cx(
+        "transition-all duration-300",
+        showForm ? "pb-6" : "pb-4 opacity-80 hover:opacity-100"
+      )}
     >
       <div className="flex items-center justify-between gap-4">
-        <div className="flex grow items-center gap-2">
-          <Icon className="h-6 w-6 text-gray-600 dark:text-gray-400" aria-hidden="true" />
+        <div className="flex grow items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-50 text-gray-600 dark:bg-gray-700 dark:text-gray-300">
+            <Icon className="h-5 w-5" aria-hidden="true" />
+          </div>
           <input
             type="text"
-            className="block w-full border-b border-transparent bg-transparent text-lg font-semibold tracking-wide text-gray-900 outline-none hover:border-gray-300 hover:shadow-sm focus:border-gray-300 focus:shadow-sm dark:text-gray-100 dark:hover:border-gray-600 dark:focus:border-gray-600"
+            className="block w-full border-b border-transparent bg-transparent text-lg font-bold tracking-tight text-gray-900 outline-none hover:border-gray-300 focus:border-sky-500 dark:text-white dark:hover:border-gray-600"
             value={heading}
             onChange={(e) => setHeading(e.target.value)}
           />
         </div>
-        <div className="flex items-center gap-0.5">
-          {!isFirstForm && (
-            <MoveIconButton type="up" onClick={handleMoveClick} />
-          )}
-          {!isLastForm && (
-            <MoveIconButton type="down" onClick={handleMoveClick} />
-          )}
-          <ShowIconButton show={showForm} setShow={setShowForm} />
+        <div className="flex items-center gap-1">
+          <div className="flex items-center border-r border-gray-100 pr-1 mr-1 dark:border-gray-700">
+            {!isFirstForm && (
+              <MoveIconButton type="up" onClick={handleMoveClick} />
+            )}
+            {!isLastForm && (
+              <MoveIconButton type="down" onClick={handleMoveClick} />
+            )}
+          </div>
+          <button
+            onClick={() => setShowForm(!showForm)}
+            className={cx(
+              "flex h-8 w-8 items-center justify-center rounded-full transition-all hover:bg-gray-100 dark:hover:bg-gray-700",
+              showForm ? "rotate-180 text-sky-500" : "text-gray-400"
+            )}
+          >
+            <ChevronDownIcon className="h-5 w-5" />
+          </button>
         </div>
       </div>
       <ExpanderWithHeightTransition expanded={showForm}>
-        {children}
+        <div className="pt-4">
+          {children}
+        </div>
       </ExpanderWithHeightTransition>
       {showForm && addButtonText && (
-        <div className="mt-2 flex justify-end">
+        <div className="mt-6 flex justify-end">
           <button
             type="button"
             onClick={() => {
               dispatch(addSectionInForm({ form }));
             }}
-            className="flex items-center rounded-md bg-white py-2 pl-3 pr-4 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-gray-700 dark:text-gray-100 dark:ring-gray-600 dark:hover:bg-gray-600"
+            className="flex items-center rounded-lg bg-sky-50 px-4 py-2 text-sm font-bold text-sky-600 transition-all hover:bg-sky-100 dark:bg-sky-900/20 dark:text-sky-400 dark:hover:bg-sky-900/30"
           >
             <PlusSmallIcon
-              className="-ml-0.5 mr-1.5 h-5 w-5 text-gray-400"
+              className="-ml-1 mr-1 h-5 w-5"
               aria-hidden="true"
             />
             {addButtonText}
@@ -165,56 +185,43 @@ export const FormSection = ({
   };
 
   return (
-    <>
-      {idx !== 0 && (
-        <div className="mb-4 mt-6 border-t-2 border-dotted border-gray-200 dark:border-gray-700" />
-      )}
-      <div className="relative grid grid-cols-6 gap-3">
+    <div className={cx(
+      "group relative rounded-xl border border-transparent p-4 transition-all",
+      idx !== 0 && "mt-4 border-t-gray-100 dark:border-t-gray-700 pt-8"
+    )}>
+      <div className="grid grid-cols-6 gap-4">
         {children}
-        <div className={`absolute right-0 top-0 flex gap-0.5 `}>
-          <div
-            className={`transition-all duration-300 ${
-              showMoveUp ? "" : "invisible opacity-0"
-            } ${showMoveDown ? "" : "-mr-6"}`}
-          >
-            <MoveIconButton
-              type="up"
-              size="small"
-              onClick={() => handleMoveClick("up")}
-            />
-          </div>
-          <div
-            className={`transition-all duration-300 ${
-              showMoveDown ? "" : "invisible opacity-0"
-            }`}
-          >
-            <MoveIconButton
-              type="down"
-              size="small"
-              onClick={() => handleMoveClick("down")}
-            />
-          </div>
-          <div
-            className={`transition-all duration-300 ${
-              showDelete ? "" : "invisible opacity-0"
-            }`}
-          >
-            <DeleteIconButton
-              onClick={handleDeleteClick}
-              tooltipText={deleteButtonTooltipText}
-            />
-          </div>
-          {isHidden !== undefined && (
-            <div className={`transition-all duration-300`}>
-              <ShowIconButton
-                show={!isHidden}
-                setShow={handleHideClick}
-                size="small"
-              />
-            </div>
-          )}
-        </div>
       </div>
-    </>
+      
+      <div className="absolute -right-2 -top-2 flex items-center gap-1 rounded-full bg-white p-1 shadow-sm border border-gray-100 opacity-0 transition-all group-hover:opacity-100 dark:bg-gray-800 dark:border-gray-700">
+        {showMoveUp && (
+          <MoveIconButton
+            type="up"
+            size="small"
+            onClick={() => handleMoveClick("up")}
+          />
+        )}
+        {showMoveDown && (
+          <MoveIconButton
+            type="down"
+            size="small"
+            onClick={() => handleMoveClick("down")}
+          />
+        )}
+        {isHidden !== undefined && (
+          <ShowIconButton
+            show={!isHidden}
+            setShow={handleHideClick}
+            size="small"
+          />
+        )}
+        {showDelete && (
+          <DeleteIconButton
+            onClick={handleDeleteClick}
+            tooltipText={deleteButtonTooltipText}
+          />
+        )}
+      </div>
+    </div>
   );
 };
