@@ -134,6 +134,12 @@ export const resumeSlice = createSlice({
         featuredSkill.rating = rating;
       }
     },
+    addSkill: (draft, action: PayloadAction<string>) => {
+      const skill = action.payload;
+      if (!draft.skills.descriptions.includes(skill)) {
+        draft.skills.descriptions.push(skill);
+      }
+    },
     changeCustom: (
       draft,
       action: PayloadAction<{ field: "descriptions"; value: string[] }>
@@ -206,6 +212,7 @@ export const {
   changeEducations,
   changeProjects,
   changeSkills,
+  addSkill,
   changeCustom,
   addSectionInForm,
   moveSectionInForm,
