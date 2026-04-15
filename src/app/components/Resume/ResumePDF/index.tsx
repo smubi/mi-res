@@ -82,6 +82,8 @@ export const ResumePDF = ({
     ),
   };
 
+  const isProfessional = templateId === "professional";
+
   return (
     <>
       <Document title={`${name} Resume`} author={name} producer={"CareerCraft"}>
@@ -106,11 +108,26 @@ export const ResumePDF = ({
             />
           )}
 
+          {/* Professional Template Side Bar */}
+          {isProfessional && (
+            <View
+              style={{
+                position: "absolute",
+                left: 0,
+                top: 0,
+                bottom: 0,
+                width: "4pt",
+                backgroundColor: themeColor,
+              }}
+            />
+          )}
+
           <View
             style={{
               ...styles.flexCol,
               padding: `${spacing[0]} ${margins}pt`,
               textAlign: templateId === "classic" ? "center" : "left",
+              marginTop: isProfessional ? spacing[4] : 0,
             }}
           >
             <ResumePDFProfile

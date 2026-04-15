@@ -5,6 +5,7 @@ import {
   Search,
   Download,
   FileJson,
+  FileText,
 } from "lucide-react";
 import { usePDF } from "@react-pdf/renderer";
 import dynamic from "next/dynamic";
@@ -32,7 +33,6 @@ const ResumeControlBar = ({
 
   const [instance, update] = usePDF({ document: resumePDFDocument });
 
-  // Hook to update pdf when document changes
   useEffect(() => {
     update(resumePDFDocument);
   }, [update, resumePDFDocument]);
@@ -48,6 +48,43 @@ const ResumeControlBar = ({
     const link = document.createElement("a");
     link.href = url;
     link.download = fileName.replace(".pdf", ".json");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleMarkdownExport = () => {
+    let md = `# ${resume.profile.name}\n\n`;
+    md += `${resume.profile.email} | ${resume.profile.phone} | ${resume.profile.location}\n`;
+    md += `${resume.profile.url}\n\n`;
+    md += `## Summary\n${resume.profile.summary}\n\n`;
+    
+    md += `## Experience\n`;
+    resume.workExperiences.forEach(exp => {
+      md += `### ${exp.company}\n**${exp.jobTitle}** | ${exp.date}\n`;
+      exp.descriptions.forEach(d => md += `- ${d}\n`);
+      md += `\n`;
+    });
+
+    md += `## Education\n`;
+    resume.educations.forEach(edu => {
+      md += `### ${edu.school}\n**${edu.degree}** | ${edu.date}\n`;
+      if (edu.gpa) md += `GPA: ${edu.gpa}\n`;
+      edu.descriptions.forEach(d => md += `- ${d}\n`);
+      md += `\n`;
+    });
+
+    md += `## Skills\n`;
+    const featured = resume.skills.featuredSkills.map(s => s.skill).filter(Boolean).join(", ");
+    if (featured) md += `**Featured:** ${featured}\n\n`;
+    resume.skills.descriptions.forEach(d => md += `- ${d}\n`);
+
+    const blob = new Blob([md], { type: "text/markdown" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = fileName.replace(".pdf", ".md");
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -83,13 +120,22 @@ const ResumeControlBar = ({
           <span className="select-none text-sm font-medium">Autoscale</span>
         </label>
       </div>
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2">
+        <button
+          onClick={handleMarkdownExport}
+          className="flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-xs font-bold text-slate-700 transition-all hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+          title="Export as Markdown"
+        >
+          <FileText size={14} />
+          <span className="hidden sm:inline">MD</span>
+        </button>
         <button
           onClick={handleJSONExport}
-          className="flex items-center gap-2 rounded-full bg-slate-100 px-6 py-2 text-sm font-bold text-slate-700 transition-all hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+          className="flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-xs font-bold text-slate-700 transition-all hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+          title="Export as JSON Resume"
         >
-          <FileJson size={16} />
-          <span className="whitespace-nowrap">JSON</span>
+          <FileJson size={14} />
+          <span className="hidden sm:inline">JSON</span>
         </button>
         <a
           className="flex items-center gap-2 rounded-full bg-indigo-600 px-6 py-2 text-sm font-bold text-white shadow-lg shadow-indigo-200 transition-all hover:bg-indigo-700 dark:shadow-none"
@@ -104,9 +150,6 @@ const ResumeControlBar = ({
   );
 };
 
-/**
- * Load ResumeControlBar client side since it uses usePDF, which is a web specific API
- */
 export const ResumeControlBarCSR = dynamic(
   () => Promise.resolve(ResumeControlBar),
   {

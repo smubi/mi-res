@@ -24,6 +24,12 @@ const TEMPLATES = [
     description: "Compact design focused on readability.",
     preview: "bg-gray-200",
   },
+  {
+    id: "professional",
+    name: "Professional",
+    description: "High-density layout for experienced pros.",
+    preview: "bg-indigo-900",
+  },
 ];
 
 export const TemplateGallery = () => {
@@ -39,7 +45,7 @@ export const TemplateGallery = () => {
       <h3 className="text-sm font-bold uppercase tracking-widest text-gray-400 dark:text-gray-500">
         Resume Template
       </h3>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {TEMPLATES.map((template) => {
           const isSelected = templateId === template.id;
           return (

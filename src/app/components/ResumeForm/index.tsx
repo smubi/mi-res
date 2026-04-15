@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   useAppSelector,
   useSaveStateToLocalStorageOnChange,
@@ -53,7 +53,7 @@ import { FlexboxSpacer } from "components/FlexboxSpacer";
 import { FormTabs, TabType } from "./FormTabs";
 import { Accordion, AccordionItem } from "./Form/Accordion";
 import { cx } from "lib/cx";
-import { Search } from "lucide-react";
+import { Search, Trophy } from "lucide-react";
 
 const formTypeToComponent: { [type in ShowForm]: () => JSX.Element } = {
   workExperiences: WorkExperiencesForm,
@@ -82,6 +82,20 @@ export const ResumeForm = () => {
   const [activeTab, setActiveTab] = useState<TabType>("content");
   const [isATSMatchModalOpen, setIsATSMatchModalOpen] = useState(false);
 
+  const strengthScore = useMemo(() => {
+    let score = 0;
+    if (resume.profile.name) score += 10;
+    if (resume.profile.email) score += 10;
+    const allBullets = [
+      ...resume.workExperiences.flatMap(w => w.descriptions),
+      ...resume.projects.flatMap(p => p.descriptions)
+    ];
+    score += Math.min(40, allBullets.length * 4);
+    const metricsCount = allBullets.filter(b => /\d+%|\d+\s?percent|\$\d+|\d+\+/.test(b)).length;
+    score += Math.round((metricsCount / Math.max(1, allBullets.length)) * 40);
+    return Math.min(100, score);
+  }, [resume]);
+
   return (
     <div
       className={cx(
@@ -92,7 +106,24 @@ export const ResumeForm = () => {
       onMouseOver={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
     >
-      <FormTabs activeTab={activeTab} onChange={setActiveTab} />
+      <div className="sticky top-0 z-40 bg-white dark:bg-gray-900">
+        <div className="flex items-center justify-between border-b border-gray-100 px-6 py-3 dark:border-gray-800">
+          <div className="flex items-center gap-2">
+            <Trophy className={cx("h-5 w-5", strengthScore > 80 ? "text-yellow-500" : "text-gray-400")} />
+            <span className="text-xs font-black uppercase tracking-widest text-gray-400">Resume Strength</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="h-1.5 w-24 overflow-hidden rounded-full bg-gray-100 dark:bg-gray-800">
+              <div 
+                className={cx("h-full transition-all duration-1000", strengthScore > 80 ? "bg-green-500" : strengthScore > 50 ? "bg-sky-500" : "bg-amber-500")}
+                style={{ width: `${strengthScore}%` }}
+              />
+            </div>
+            <span className="text-sm font-black text-gray-900 dark:text-white">{strengthScore}%</span>
+          </div>
+        </div>
+        <FormTabs activeTab={activeTab} onChange={setActiveTab} />
+      </div>
       
       <div className="flex justify-center md:justify-end">
         <section className="flex w-full max-w-2xl flex-col gap-8 p-[var(--resume-padding)]">
