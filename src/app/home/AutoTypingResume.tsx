@@ -1,6 +1,10 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
-import { ResumePDF } from "components/Resume/ResumePDF";
+import dynamic from "next/dynamic";
+const ResumePDF = dynamic(
+  () => import("components/Resume/ResumePDF").then((mod) => mod.ResumePDF),
+  { ssr: false }
+);
 import { initialResumeState } from "lib/redux/resumeSlice";
 import { initialSettings } from "lib/redux/settingsSlice";
 import { ResumeIframeCSR } from "components/Resume/ResumeIFrame";

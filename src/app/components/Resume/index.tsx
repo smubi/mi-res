@@ -1,7 +1,11 @@
 "use client";
 import { useState, useMemo, useEffect } from "react";
+import dynamic from "next/dynamic";
 import { ResumeIframeCSR } from "components/Resume/ResumeIFrame";
-import { ResumePDF } from "components/Resume/ResumePDF";
+const ResumePDF = dynamic(
+  () => import("components/Resume/ResumePDF").then((mod) => mod.ResumePDF),
+  { ssr: false }
+);
 import {
   ResumeControlBarCSR,
   ResumeControlBarBorder,

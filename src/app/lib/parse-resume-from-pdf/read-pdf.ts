@@ -3,7 +3,9 @@
 import * as pdfjs from "pdfjs-dist";
 // @ts-ignore
 import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
-pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
+if (typeof window !== "undefined") {
+  pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
+}
 
 import type { TextItem as PdfjsTextItem } from "pdfjs-dist/types/src/display/api";
 import type { TextItem, TextItems } from "lib/parse-resume-from-pdf/types";
