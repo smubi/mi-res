@@ -1,8 +1,15 @@
-name = "open-resume"
+#:schema node_modules/wrangler/config-schema.json
+name = "career-craft"
 main = ".open-next/worker.js"
-compatibility_date = "2024-01-01"
+compatibility_date = "2024-09-23"
 compatibility_flags = ["nodejs_compat"]
 
-[assets]
+[vars]
+NEXTJS_ENV = "production"
+
+[[assets]]
 directory = ".open-next/assets"
 binding = "ASSETS"
+
+[observability]
+enabled = true
