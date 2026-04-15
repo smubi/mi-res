@@ -10,8 +10,8 @@
     "test": "jest --watch",
     "test:ci": "jest --ci",
     "pages:build": "npx @cloudflare/next-on-pages",
-    "preview": "npm run pages:build && wrangler dev",
-    "deploy": "npm run pages:build && wrangler deploy"
+    "preview": "pnpm pages:build && wrangler dev",
+    "deploy": "pnpm pages:build && wrangler pages deploy .vercel/output"
   },
   "dependencies": {
     "@heroicons/react": "^2.0.18",

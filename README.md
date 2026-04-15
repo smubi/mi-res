@@ -27,6 +27,6 @@ CareerCraft’s second component is the ATS checker. For those who have an exist
 ## Getting Started
 
 1. Clone the repository
-2. Install dependencies: `npm install`
-3. Run the development server: `npm run dev`
+2. Install dependencies: `pnpm install`
+3. Run the development server: `pnpm dev`
 4. Open [http://localhost:3000](http://localhost:3000) to see CareerCraft live.
