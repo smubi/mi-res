@@ -2,6 +2,8 @@ import "globals.css";
 import { TopNavBar } from "components/TopNavBar";
 import { AppProvider } from "components/AppProvider";
 
+export const runtime = 'edge';
+
 export const metadata = {
   title: "CareerCraft - AI-Powered Resume Builder & ATS Checker",
   description:
