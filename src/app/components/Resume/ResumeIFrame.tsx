@@ -11,7 +11,6 @@ import {
 } from "lib/constants";
 import dynamic from "next/dynamic";
 import { getAllFontFamiliesToLoad } from "components/fonts/lib";
-import { HeatmapOverlay } from "./HeatmapOverlay";
 import type { Resume } from "lib/redux/types";
 
 const getIframeInitialContent = (isA4: boolean) => {
@@ -52,16 +51,12 @@ const ResumeIframe = ({
   children,
   resume,
   enablePDFViewer = false,
-  showHeatmap = false,
-  showPath = false,
 }: {
   documentSize: string;
   scale: number;
   children: React.ReactNode;
   resume: Resume;
   enablePDFViewer?: boolean;
-  showHeatmap?: boolean;
-  showPath?: boolean;
 }) => {
   const isA4 = documentSize === "A4";
   const iframeInitialContent = useMemo(
@@ -102,14 +97,6 @@ const ResumeIframe = ({
         >
           {children}
         </Frame>
-        {(showHeatmap || showPath) && (
-          <HeatmapOverlay 
-            width={width} 
-            height={height} 
-            resume={resume} 
-            showPath={showPath} 
-          />
-        )}
       </div>
     </div>
   );
