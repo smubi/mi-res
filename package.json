@@ -49,10 +49,5 @@
     "jest-environment-jsdom": "^29.5.0",
     "prettier-plugin-tailwindcss": "^0.2.1",
     "wrangler": "^4.82.2"
-  },
-  "pnpm": {
-    "overrides": {
-      "canvas": "https://registry.npmjs.org/@napi-rs/canvas/-/canvas-0.1.0.tgz"
-    }
   }
 }
