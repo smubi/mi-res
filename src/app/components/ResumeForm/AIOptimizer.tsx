@@ -67,7 +67,9 @@ export const AIOptimizer = ({ onOptimize, currentText }: AIOptimizerProps) => {
         throw new Error("API Request Failed");
       }
 
-      const data = await response.json();
+      const data = (await response.json()) as {
+        choices: { message: { content: string } }[];
+      };
       const suggestion = data.choices[0].message.content.replace(/^[-•]\s*/, "").trim();
       onOptimize(suggestion);
     } catch (e) {
