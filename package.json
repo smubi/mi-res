@@ -9,9 +9,9 @@
     "lint": "next lint",
     "test": "jest --watch",
     "test:ci": "jest --ci",
-    "pages:build": "npx @cloudflare/next-on-pages",
-    "preview": "pnpm pages:build && wrangler dev",
-    "deploy": "pnpm pages:build && wrangler pages deploy .vercel/output"
+    "worker:build": "opennextjs-cloudflare",
+    "preview": "pnpm run worker:build && wrangler dev",
+    "deploy": "pnpm run worker:build && wrangler deploy"
   },
   "dependencies": {
     "@heroicons/react": "^2.0.18",
@@ -43,7 +43,7 @@
     "typescript": "5.0.4"
   },
   "devDependencies": {
-    "@cloudflare/next-on-pages": "^1.13.16",
+    "@opennextjs/cloudflare": "^0.3.10",
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
