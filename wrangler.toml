@@ -8,9 +8,7 @@ minify = true
 [vars]
 NEXTJS_ENV = "production"
 
-[[assets]]
-directory = ".open-next/assets"
-binding = "ASSETS"
+assets = ".open-next/assets"
 
 [observability]
 enabled = true
